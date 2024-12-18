@@ -1,3 +1,5 @@
+choco install git-lfs
+
 geopandas
 shapely
 pandas
