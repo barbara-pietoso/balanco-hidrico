@@ -1,26 +1,6 @@
-!pip install fiona
-!apt-get install xvfb
-
-import os
-#Configurando o display virtual
-os.environ['DISPLAY'] = ':99'
-#Iniciando o Xvfb
-!Xvfb :99 -screen 0 1024x768x24 &
-
-from tkinter import Tk, Label, Button, Entry, Checkbutton, IntVar
-from tkinter.filedialog import askopenfilename, asksaveasfile
-from tkinter import Tk, Label, Button, Entry, Checkbutton, IntVar
-from tkinter.filedialog import askopenfilename, asksaveasfile
-import geopandas as gpd
-import fiona
-from shapely.geometry import Point
-from shapely.ops import cascaded_union
-import pandas as pd
-import numpy as np
-from time import time
-import matplotlib.pyplot as plt
-
-fiona.supported_drivers['KML'] = 'rw'
-
-from matplotlib import rcParams
-rcParams.update({'figure.autolayout': True})
+geopandas
+shapely
+pandas
+pyogrio
+drive
+glob
