@@ -6,3 +6,5 @@ pandas
 pyogrio
 drive
 glob
+os
+requests==2.28.1
