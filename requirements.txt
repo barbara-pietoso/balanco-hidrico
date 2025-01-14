@@ -1,10 +1,12 @@
-choco install git-lfs
-
 geopandas
-shapely
-pandas
 pyogrio
-drive
+point
 glob
+dask.dataframe
+delayed
+pandas
+matplotlib.pyplot
+matplotlib.patches
+warnings
+zipfile
 os
-requests==2.28.1
