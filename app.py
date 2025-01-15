@@ -12,9 +12,9 @@ import textwrap
 import extra_streamlit_components as stx
 from streamlit_echarts import st_echarts
 import math
-
 from io import BytesIO
 import zipfile
+import tempfile
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -34.0  # Latitude mínima
@@ -83,10 +83,13 @@ else:
                         zip_file.writestr('Unidades_BH_RS.shx', shx_file)
                         zip_file.writestr('Unidades_BH_RS.dbf', dbf_file)
 
-                    # Ler o arquivo zip na memória
-                    zip_buffer.seek(0)  # Resetar o ponteiro para o começo
-                    # Usar o método 'zip://' e passar o conteúdo diretamente do arquivo em memória
-                    gdf = gpd.read_file(f"zip://{zip_buffer.read().decode('latin-1')}")
+                    # Salvar o arquivo zip em um arquivo temporário
+                    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                        temp_file.write(zip_buffer.getvalue())
+                        temp_file_path = temp_file.name
+
+                # Ler o arquivo no caminho temporário
+                gdf = gpd.read_file(f"zip://{temp_file_path}")
 
                 # Adicionar o arquivo GeoDataFrame ao mapa
                 folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
