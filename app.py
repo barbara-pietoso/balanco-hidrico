@@ -54,15 +54,16 @@ enviar = col2.button("Enviar")
 default_latitude = -30.0
 default_longitude = -53.5
 
-# Criar mapa centralizado no centro do Rio Grande do Sul (sem coordenadas inseridas)
-if not enviar:
-    mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
-else:
+# Inicializar o mapa antes de qualquer interação
+mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+
+# Criar mapa quando as coordenadas forem enviadas
+if enviar:
     if latitude is not None and longitude is not None:
         if valida_coordenadas(latitude, longitude):
             col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
             
-            # Criar mapa centrado nas coordenadas inseridas
+            # Atualizar o mapa para centralizar nas coordenadas inseridas
             mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
 
             # URL do arquivo .zip hospedado no GitHub
@@ -106,11 +107,12 @@ else:
                 col2.write(f"Erro ao baixar ou extrair os arquivos: {e}")
         else:
             col2.write("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
-            # Criar mapa centralizado no centro do Rio Grande do Sul em caso de erro
+            # Mapa padrão quando as coordenadas não são válidas
             mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
             col2.write("Mapa centralizado no Rio Grande do Sul.")
     else:
         col2.write("Por favor, insira as coordenadas corretamente.")
+        # Mapa padrão
         mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # Exibir o mapa no Streamlit
