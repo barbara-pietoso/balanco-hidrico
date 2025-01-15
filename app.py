@@ -39,14 +39,20 @@ if latitude and longitude:
     # Criar mapa centrado nas coordenadas inseridas
     mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
 
-    # Carregar o arquivo GeoJSON diretamente da URL
-    geojson_data = requests.get(file_url).json()
+    try:
+        # Carregar o arquivo GeoJSON diretamente da URL
+        response = requests.get(file_url)
+        response.raise_for_status()  # Verifica se houve algum erro na requisição
+        geojson_data = response.json()
 
-    # Adicionar o arquivo GeoJSON ao mapa
-    folium.GeoJson(geojson_data).add_to(mapa)
+        # Adicionar o arquivo GeoJSON ao mapa
+        folium.GeoJson(geojson_data).add_to(mapa)
 
-    # Adicionar um marcador no mapa
-    folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
+        # Adicionar um marcador no mapa
+        folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
-    # Exibir o mapa no Streamlit
-    st_folium(mapa, width=700, height=500)
+        # Exibir o mapa no Streamlit
+        st_folium(mapa, width=700, height=500)
+
+    except requests.exceptions.RequestException as e:
+        col2.write(f"Erro ao carregar o arquivo GeoJSON: {e}")
