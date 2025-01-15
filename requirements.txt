@@ -5,4 +5,5 @@ glob2==0.7
 dask==2023.9.1
 matplotlib==3.8.0
 pandas==2.1.1
+streamlit==1.26.0
 
