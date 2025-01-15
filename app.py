@@ -1,5 +1,5 @@
 import geopandas as gpd
-import pyogrio  # ou 'fiona'
+import pyogrio 
 from shapely.geometry import Point
 import glob
 import dask.dataframe as dd
