@@ -1,11 +1,9 @@
-from google.colab import drive
 import geopandas as gpd
 import pyogrio  # ou 'fiona'
 from shapely.geometry import Point
 import glob
 import dask.dataframe as dd
 from dask import delayed
-import geopandas as gpd
 from shapely.geometry import Point
 import pandas as pd
 import matplotlib.pyplot as plt
