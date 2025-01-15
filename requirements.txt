@@ -1,7 +1,6 @@
 geopandas
 pyogrio
 point
-dask.dataframe
 delayed
 pandas
 matplotlib.pyplot
