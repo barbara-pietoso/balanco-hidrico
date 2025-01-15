@@ -7,7 +7,7 @@ import os
 from io import BytesIO
 import streamlit as st
 import folium
-from streamlit_folium import st_folium
+from streamlit.components.v1 import html  # Para exibir o mapa como HTML
 
 # Configurações da página
 st.set_page_config(
@@ -108,6 +108,6 @@ if enviar:
         # Adicionar um marcador no mapa
         folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
 
-# Exibir o mapa no Streamlit
-st_folium(mapa, width=700, height=500)
-
+# Salvar o mapa como HTML e exibi-lo no Streamlit
+mapa_html = mapa._repr_html_()
+html(mapa_html, height=500)
