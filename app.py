@@ -22,8 +22,9 @@ def valida_coordenadas(latitude, longitude):
 def download_and_extract_zip(url):
     try:
         # Baixar o arquivo
+        st.write(f"Baixando o arquivo de {url}...")
         response = requests.get(url)
-        response.raise_for_status()
+        response.raise_for_status()  # Garante que a resposta seja bem-sucedida (status 200)
         
         # Salvar o arquivo em uma pasta temporária
         temp_dir = tempfile.mkdtemp()
@@ -32,6 +33,8 @@ def download_and_extract_zip(url):
         with open(zip_path, 'wb') as f:
             f.write(response.content)
         
+        st.write(f"Arquivo baixado com sucesso para {zip_path}")
+
         # Extrair o arquivo ZIP
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(temp_dir)
@@ -40,7 +43,7 @@ def download_and_extract_zip(url):
         return temp_dir
     
     except requests.exceptions.RequestException as e:
-        print(f"Erro ao baixar o arquivo: {e}")
+        st.error(f"Erro ao baixar o arquivo: {e}")
         return None
 
 # URL do arquivo shapefile zipado
