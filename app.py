@@ -15,7 +15,7 @@ import math
 
 # Configurações da página
 st.set_page_config(
-    page_title="Consulta de balanço hídrico",
+    page_title="Balanço Hídrico RS",
     page_icon="	:droplet:",
     layout="wide",
     initial_sidebar_state='collapsed'
@@ -23,6 +23,6 @@ st.set_page_config(
 
 col1, col2, col3 = st.columns([1,5,1], vertical_alignment="center")
 
-col2.markdown("<h1 style='text-align: center;'>Monitoramento de Agrotóxicos na Água no Rio Grande do Sul - Dados FioCruz</h1>", unsafe_allow_html=True)
+col2.markdown("<h1 style='text-align: center;'>Consulta de Balanço Hídrico</h1>", unsafe_allow_html=True)
 
 
