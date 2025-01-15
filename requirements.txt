@@ -3,8 +3,7 @@ pyogrio
 point
 delayed
 pandas
-matplotlib.pyplot
-matplotlib.patches
+matplotlib
 warnings
 zipfile
 os
