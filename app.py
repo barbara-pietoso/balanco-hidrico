@@ -50,12 +50,14 @@ enviar = col2.button("Enviar")
 default_latitude = -30.0
 default_longitude = -53.5
 
-# Verificação e exibição do mapa
-if enviar:
+# Criar mapa centralizado no centro do Rio Grande do Sul (sem coordenadas inseridas)
+if not enviar:
+    mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+else:
     if latitude is not None and longitude is not None:
         if valida_coordenadas(latitude, longitude):
             col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
-
+            
             # Criar mapa centrado nas coordenadas inseridas
             mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
 
@@ -74,33 +76,31 @@ if enviar:
                 # Adicionar um marcador no mapa
                 folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
-                # Exibir o mapa no Streamlit
-                st_folium(mapa, width=700, height=500)
-
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo GeoJSON: {e}")
         else:
             col2.write("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
+            # Criar mapa centralizado no centro do Rio Grande do Sul em caso de erro
+            mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+            col2.write("Mapa centralizado no Rio Grande do Sul.")
     else:
         col2.write("Por favor, insira as coordenadas corretamente.")
-else:
-    # Criar mapa centralizado no centro do Rio Grande do Sul (sem coordenadas inseridas)
-    mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+        mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
-    # Carregar o arquivo GeoJSON diretamente da URL
-    file_url = "https://drive.google.com/uc?export=download&id=1--laLHmabXElImR5RT-j-c4FajYICPqJ"
+# Carregar o arquivo GeoJSON diretamente da URL
+file_url = "https://drive.google.com/uc?export=download&id=1--laLHmabXElImR5RT-j-c4FajYICPqJ"
     
-    try:
-        # Carregar o arquivo GeoJSON diretamente da URL
-        response = requests.get(file_url)
-        response.raise_for_status()  # Verifica se houve algum erro na requisição
-        geojson_data = response.json()
+try:
+    # Carregar o arquivo GeoJSON diretamente da URL
+    response = requests.get(file_url)
+    response.raise_for_status()  # Verifica se houve algum erro na requisição
+    geojson_data = response.json()
 
-        # Adicionar o arquivo GeoJSON ao mapa
-        folium.GeoJson(geojson_data).add_to(mapa)
+    # Adicionar o arquivo GeoJSON ao mapa
+    folium.GeoJson(geojson_data).add_to(mapa)
 
-        # Exibir o mapa no Streamlit
-        st_folium(mapa, width=700, height=500)
+    # Exibir o mapa no Streamlit
+    st_folium(mapa, width=700, height=500)
 
-    except requests.exceptions.RequestException as e:
-        col2.write(f"Erro ao carregar o arquivo GeoJSON: {e}")
+except requests.exceptions.RequestException as e:
+    col2.write(f"Erro ao carregar o arquivo GeoJSON: {e}")
