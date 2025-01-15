@@ -12,6 +12,7 @@ import matplotlib.patches as mpatches
 import warnings
 import zipfile
 import os
+import streamlit as st
 
 # Configurações da página
 st.set_page_config(
