@@ -1,5 +1,7 @@
+pip install -r requirements.txt
+
 pip freeze > requirements.txt
-pip install streamlit
+
 
 from google.colab import drive
 import geopandas as gpd
