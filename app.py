@@ -26,12 +26,13 @@ col1, col2, col3 = st.columns([1, 5, 1], vertical_alignment="center")
 col2.markdown("<h1 style='text-align: center;'>Consulta da Vazão Outorgável</h1>", unsafe_allow_html=True)
 col2.subheader("Insira as Coordenadas:")
 
-latitude = col2.number_input("Latitude", min_value=-90.0, max_value=90.0, step=0.0001, format="%.4f")
-longitude = col2.number_input("Longitude", min_value=-180.0, max_value=180.0, step=0.0001, format="%.4f")
-
 # Coordenadas iniciais do centro do Rio Grande do Sul
 default_latitude = -30.0
 default_longitude = -53.5
+
+latitude = col2.number_input("Latitude", min_value=-90.0, max_value=90.0, step=0.0001, format="%.4f")
+longitude = col2.number_input("Longitude", min_value=-180.0, max_value=180.0, step=0.0001, format="%.4f")
+
 
 # Exibir as coordenadas inseridas
 if latitude and longitude:
