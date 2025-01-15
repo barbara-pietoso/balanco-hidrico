@@ -1,5 +1,4 @@
 geopandas==0.14.0
-pyogrio==0.5.1
 shapely==2.0.1
 glob2==0.7
 dask[dataframe]==2023.9.1
