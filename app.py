@@ -85,7 +85,9 @@ else:
 
                     # Ler o arquivo zip na memória
                     zip_buffer.seek(0)  # Resetar o ponteiro para o começo
-                    gdf = gpd.read_file(f"zip://{zip_buffer.name}")
+                    with zipfile.ZipFile(zip_buffer) as zf:
+                        # Passar o arquivo .shp diretamente para o geopandas
+                        gdf = gpd.read_file(f"zip://{zf.filename}")
 
                 # Adicionar o arquivo GeoDataFrame ao mapa
                 folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
