@@ -14,6 +14,7 @@ from streamlit_echarts import st_echarts
 import math
 
 from io import BytesIO
+import zipfile
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -34.0  # Latitude mínima
@@ -74,9 +75,17 @@ else:
                 shx_file = requests.get(shx_url).content
                 dbf_file = requests.get(dbf_url).content
 
-                # Carregar o shapefile no Geopandas a partir dos bytes
-                with BytesIO(shp_file) as shp, BytesIO(shx_file) as shx, BytesIO(dbf_file) as dbf:
-                    gdf = gpd.read_file(f"zip://{shp.filename},{shx.filename},{dbf.filename}")
+                # Criar um arquivo ZIP em memória
+                with BytesIO() as zip_buffer:
+                    with zipfile.ZipFile(zip_buffer, mode='w', compression=zipfile.ZIP_DEFLATED) as zip_file:
+                        # Adicionar os arquivos no ZIP
+                        zip_file.writestr('Unidades_BH_RS.shp', shp_file)
+                        zip_file.writestr('Unidades_BH_RS.shx', shx_file)
+                        zip_file.writestr('Unidades_BH_RS.dbf', dbf_file)
+
+                    # Ler o arquivo zip na memória
+                    zip_buffer.seek(0)  # Resetar o ponteiro para o começo
+                    gdf = gpd.read_file(f"zip://{zip_buffer.name}")
 
                 # Adicionar o arquivo GeoDataFrame ao mapa
                 folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
