@@ -4,6 +4,8 @@ dask[dataframe]==2023.9.1
 matplotlib==3.8.0
 pandas==2.1.1
 streamlit==1.26.0
+shapely==2.0.1
+pillow==9.5.0
 
 
 dask[dataframe]
