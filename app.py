@@ -8,6 +8,14 @@ import tempfile
 import os
 from io import BytesIO
 
+# Configurações da página
+st.set_page_config(
+    page_title="Vazão Outorgável",
+    page_icon=":droplet:",
+    layout="wide",
+    initial_sidebar_state='collapsed'
+)
+
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -34.0  # Latitude mínima
 LAT_MAX = -28.0  # Latitude máxima
@@ -20,14 +28,6 @@ def valida_coordenadas(latitude, longitude):
         return True
     else:
         return False
-
-# Configurações da página
-st.set_page_config(
-    page_title="Vazão Outorgável",
-    page_icon=":droplet:",
-    layout="wide",
-    initial_sidebar_state='collapsed'
-)
 
 col1, col2, col3 = st.columns([1, 5, 1], vertical_alignment="center")
 
