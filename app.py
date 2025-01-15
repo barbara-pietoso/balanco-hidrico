@@ -23,6 +23,6 @@ st.set_page_config(
 
 col1, col2, col3 = st.columns([1,5,1], vertical_alignment="center")
 
-col2.markdown("<h1 style='text-align: center;'>Consulta de Balanço Hídrico</h1>", unsafe_allow_html=True)
+col2.markdown("<h1 style='text-align: center;'>Consulta de Balanço Hídrico no RS</h1>", unsafe_allow_html=True)
 
 
