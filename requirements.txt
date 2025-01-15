@@ -6,9 +6,6 @@ pandas==2.1.1
 streamlit==1.26.0
 pillow==9.5.0
 
-
-pip install --prefer-binary shapely pillow
-
 dask[dataframe]
 
 
