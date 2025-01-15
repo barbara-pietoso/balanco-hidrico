@@ -1,21 +1,12 @@
 import pandas as pd 
 import geopandas as gpd
-import plotly.express as px
-import streamlit as st
-import plotly.graph_objects as go
 import requests
 import folium
-from streamlit_folium import st_folium, folium_static
-import altair as alt
-from unidecode import unidecode
-import textwrap
-import extra_streamlit_components as stx
-from streamlit_echarts import st_echarts
-import math
-from io import BytesIO
+from streamlit_folium import st_folium
 import zipfile
 import tempfile
 import os
+from io import BytesIO
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -34.0  # Latitude mínima
@@ -54,10 +45,12 @@ enviar = col2.button("Enviar")
 default_latitude = -30.0
 default_longitude = -53.5
 
-# Inicializar o mapa antes de qualquer interação
+# Inicializar o mapa com as coordenadas padrão
 mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
-# Criar mapa quando as coordenadas forem enviadas
+# URL do arquivo .zip hospedado no GitHub
+zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/Unidades_BH_RS.zip"
+
 if enviar:
     if latitude is not None and longitude is not None:
         if valida_coordenadas(latitude, longitude):
@@ -65,9 +58,6 @@ if enviar:
             
             # Atualizar o mapa para centralizar nas coordenadas inseridas
             mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
-
-            # URL do arquivo .zip hospedado no GitHub
-            zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/Unidades_BH_RS.zip"
 
             try:
                 # Baixar o arquivo .zip
@@ -116,4 +106,4 @@ if enviar:
         mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # Exibir o mapa no Streamlit
-st_folium(mapa, width=700, height=500)
+folium_static(mapa)
