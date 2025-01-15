@@ -46,13 +46,14 @@ enviar = col2.button("Enviar")
 default_latitude = -30.0
 default_longitude = -53.5
 
-# Inicializar o mapa com as coordenadas padrão
+# Mapa inicial padrão com as coordenadas do Rio Grande do Sul
 if 'map' not in st.session_state:
     st.session_state.map = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # URL do arquivo .zip hospedado no GitHub
 zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/Unidades_BH_RS.zip"
 
+# Atualizar o mapa com as coordenadas inseridas
 if enviar:
     if latitude is not None and longitude is not None:
         if valida_coordenadas(latitude, longitude):
@@ -99,12 +100,12 @@ if enviar:
                 col2.write(f"Erro ao baixar ou extrair os arquivos: {e}")
         else:
             col2.write("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
-            # Mapa padrão quando as coordenadas não são válidas
+            # Manter o mapa padrão quando as coordenadas não são válidas
             st.session_state.map = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
             col2.write("Mapa centralizado no Rio Grande do Sul.")
     else:
         col2.write("Por favor, insira as coordenadas corretamente.")
-        # Mapa padrão
+        # Manter o mapa padrão
         st.session_state.map = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # Exibir o mapa no Streamlit
