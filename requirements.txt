@@ -1,9 +1,8 @@
-geopandas
-pyogrio
-point
-delayed
-pandas
-matplotlib
-warnings
-zipfile
-os
+geopandas==0.14.0
+pyogrio==0.5.1
+shapely==2.0.1
+glob2==0.7
+dask==2023.9.1
+matplotlib==3.8.0
+pandas==2.1.1
+
