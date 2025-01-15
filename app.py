@@ -1,17 +1,10 @@
 import geopandas as gpd
-import pyogrio 
-from shapely.geometry import Point
-import glob
 import dask.dataframe as dd
 from dask import delayed
-from shapely.geometry import Point
 import pandas as pd
 import matplotlib.pyplot as plt
-import pyogrio
 import matplotlib.patches as mpatches
 import warnings
-import zipfile
-import os
 import streamlit as st
 
 # Configurações da página
