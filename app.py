@@ -15,7 +15,7 @@ import math
 
 # Configurações da página
 st.set_page_config(
-    page_title="Balanço Hídrico RS",
+    page_title="Vazão Outorgável",
     page_icon="	:droplet:",
     layout="wide",
     initial_sidebar_state='collapsed'
