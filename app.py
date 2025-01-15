@@ -1,8 +1,3 @@
-pip install -r requirements.txt
-
-pip freeze > requirements.txt
-
-
 from google.colab import drive
 import geopandas as gpd
 import pyogrio  # ou 'fiona'
