@@ -1,9 +1,13 @@
-geopandas
-pyogrio
-shapely
-glob2
-dask
-matplotlib
-pandas
-streamlit
+geopandas==0.14.0
+pyogrio==0.5.1
+shapely==2.0.1
+glob2==0.7
+dask[dataframe]==2023.9.1
+matplotlib==3.8.0
+pandas==2.1.1
+streamlit==1.26.0
+
+
+pip install "dask[dataframe]"
+pip install dask-expr
 
