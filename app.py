@@ -1,11 +1,17 @@
+import pandas as pd 
 import geopandas as gpd
-import dask.dataframe as dd
-from dask import delayed
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import warnings
+import plotly.express as px
 import streamlit as st
+import plotly.graph_objects as go
+import requests
+import folium
+from streamlit_folium import st_folium, folium_static
+import altair as alt
+from unidecode import unidecode
+import textwrap
+import extra_streamlit_components as stx
+from streamlit_echarts import st_echarts
+import math
 
 # Configurações da página
 st.set_page_config(
