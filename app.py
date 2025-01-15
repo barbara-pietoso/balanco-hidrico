@@ -7,6 +7,7 @@ import zipfile
 import tempfile
 import os
 from io import BytesIO
+import streamlit as st
 
 # Configurações da página
 st.set_page_config(
@@ -106,4 +107,4 @@ if enviar:
         mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # Exibir o mapa no Streamlit
-folium_static(mapa)
+st_folium(mapa, width=700, height=500)
