@@ -13,6 +13,8 @@ import extra_streamlit_components as stx
 from streamlit_echarts import st_echarts
 import math
 
+from io import BytesIO
+
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -34.0  # Latitude mínima
 LAT_MAX = -28.0  # Latitude máxima
@@ -61,23 +63,29 @@ else:
             # Criar mapa centrado nas coordenadas inseridas
             mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
 
-            # Carregar o arquivo GeoJSON diretamente da URL
-            file_url = "https://drive.google.com/uc?export=download&id=1--laLHmabXElImR5RT-j-c4FajYICPqJ"
-            
-            try:
-                # Carregar o arquivo GeoJSON diretamente da URL
-                response = requests.get(file_url)
-                response.raise_for_status()  # Verifica se houve algum erro na requisição
-                geojson_data = response.json()
+            # URL do arquivo .shp hospedado no GitHub (precisa dos arquivos .shp, .shx, .dbf)
+            shp_url = "https://raw.githubusercontent.com/barbara-pietoso/balanco-hidrico/main/Unidades_BH_RS.shp"
+            shx_url = "https://raw.githubusercontent.com/barbara-pietoso/balanco-hidrico/main/Unidades_BH_RS.shx"
+            dbf_url = "https://raw.githubusercontent.com/barbara-pietoso/balanco-hidrico/main/Unidades_BH_RS.dbf"
 
-                # Adicionar o arquivo GeoJSON ao mapa
-                folium.GeoJson(geojson_data).add_to(mapa)
+            try:
+                # Baixar os arquivos .shp, .shx e .dbf
+                shp_file = requests.get(shp_url).content
+                shx_file = requests.get(shx_url).content
+                dbf_file = requests.get(dbf_url).content
+
+                # Carregar o shapefile no Geopandas a partir dos bytes
+                with BytesIO(shp_file) as shp, BytesIO(shx_file) as shx, BytesIO(dbf_file) as dbf:
+                    gdf = gpd.read_file(f"zip://{shp.filename},{shx.filename},{dbf.filename}")
+
+                # Adicionar o arquivo GeoDataFrame ao mapa
+                folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
 
                 # Adicionar um marcador no mapa
                 folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
             except requests.exceptions.RequestException as e:
-                col2.write(f"Erro ao carregar o arquivo GeoJSON: {e}")
+                col2.write(f"Erro ao carregar o arquivo SHP: {e}")
         else:
             col2.write("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
             # Criar mapa centralizado no centro do Rio Grande do Sul em caso de erro
@@ -87,20 +95,5 @@ else:
         col2.write("Por favor, insira as coordenadas corretamente.")
         mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
-# Carregar o arquivo GeoJSON diretamente da URL
-file_url = "https://drive.google.com/uc?export=download&id=1--laLHmabXElImR5RT-j-c4FajYICPqJ"
-    
-try:
-    # Carregar o arquivo GeoJSON diretamente da URL
-    response = requests.get(file_url)
-    response.raise_for_status()  # Verifica se houve algum erro na requisição
-    geojson_data = response.json()
-
-    # Adicionar o arquivo GeoJSON ao mapa
-    folium.GeoJson(geojson_data).add_to(mapa)
-
-    # Exibir o mapa no Streamlit
-    st_folium(mapa, width=700, height=500)
-
-except requests.exceptions.RequestException as e:
-    col2.write(f"Erro ao carregar o arquivo GeoJSON: {e}")
+# Exibir o mapa no Streamlit
+st_folium(mapa, width=700, height=500)
