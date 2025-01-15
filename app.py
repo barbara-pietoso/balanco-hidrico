@@ -86,7 +86,7 @@ if enviar:
                         # Convertendo os dados do GeoDataFrame para um formato utilizável pelo Deck.gl
                         geojson_data = gdf.to_json()
 
-                        # Criar o mapa do Mapbox usando o pydeck
+                        # Criar o mapa do OpenStreetMap usando o pydeck
                         layer = pdk.Layer(
                             "GeoJsonLayer",
                             geojson_data,
@@ -97,7 +97,7 @@ if enviar:
                         )
 
                         # Adicionar a camada ao mapa
-                        r = pdk.Deck(layers=[layer], initial_view_state=view_state, map_style="mapbox://styles/mapbox/streets-v11", mapbox_key="your_mapbox_token_here")
+                        r = pdk.Deck(layers=[layer], initial_view_state=view_state, map_style="mapbox://styles/mapbox/light-v10", mapbox_key=None)
 
                         # Exibir o mapa no Streamlit
                         st.pydeck_chart(r)
@@ -111,13 +111,13 @@ if enviar:
             # Manter o mapa padrão quando as coordenadas não são válidas
             view_state = pdk.ViewState(latitude=default_latitude, longitude=default_longitude, zoom=7)
             col2.write("Mapa centralizado no Rio Grande do Sul.")
-            # Exibir o mapa do Mapbox
-            r = pdk.Deck(layers=[], initial_view_state=view_state, map_style="mapbox://styles/mapbox/streets-v11", mapbox_key="your_mapbox_token_here")
+            # Exibir o mapa do OpenStreetMap
+            r = pdk.Deck(layers=[], initial_view_state=view_state, map_style="mapbox://styles/mapbox/light-v10", mapbox_key=None)
             st.pydeck_chart(r)
     else:
         col2.write("Por favor, insira as coordenadas corretamente.")
         # Manter o mapa padrão
         view_state = pdk.ViewState(latitude=default_latitude, longitude=default_longitude, zoom=7)
-        # Exibir o mapa do Mapbox
-        r = pdk.Deck(layers=[], initial_view_state=view_state, map_style="mapbox://styles/mapbox/streets-v11", mapbox_key="your_mapbox_token_here")
+        # Exibir o mapa do OpenStreetMap
+        r = pdk.Deck(layers=[], initial_view_state=view_state, map_style="mapbox://styles/mapbox/light-v10", mapbox_key=None)
         st.pydeck_chart(r)
