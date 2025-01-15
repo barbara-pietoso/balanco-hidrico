@@ -47,7 +47,8 @@ default_latitude = -30.0
 default_longitude = -53.5
 
 # Inicializar o mapa com as coordenadas padrão
-mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+if 'map' not in st.session_state:
+    st.session_state.map = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # URL do arquivo .zip hospedado no GitHub
 zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/Unidades_BH_RS.zip"
@@ -58,7 +59,7 @@ if enviar:
             col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
             
             # Atualizar o mapa para centralizar nas coordenadas inseridas
-            mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
+            st.session_state.map = folium.Map(location=[latitude, longitude], zoom_start=12)
 
             try:
                 # Baixar o arquivo .zip
@@ -87,10 +88,10 @@ if enviar:
                         gdf = gpd.read_file(shp_file_path)
 
                         # Adicionar o arquivo GeoDataFrame ao mapa
-                        folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
+                        folium.GeoJson(gdf.__geo_interface__).add_to(st.session_state.map)
 
                         # Adicionar um marcador no mapa
-                        folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
+                        folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(st.session_state.map)
 
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo SHP: {e}")
@@ -99,12 +100,12 @@ if enviar:
         else:
             col2.write("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
             # Mapa padrão quando as coordenadas não são válidas
-            mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+            st.session_state.map = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
             col2.write("Mapa centralizado no Rio Grande do Sul.")
     else:
         col2.write("Por favor, insira as coordenadas corretamente.")
         # Mapa padrão
-        mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+        st.session_state.map = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # Exibir o mapa no Streamlit
-st_folium(mapa, width=700, height=500)
+st_folium(st.session_state.map, width=700, height=500)
