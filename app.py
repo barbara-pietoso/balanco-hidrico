@@ -15,6 +15,7 @@ import math
 from io import BytesIO
 import zipfile
 import tempfile
+import os
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -34.0  # Latitude mínima
@@ -76,18 +77,28 @@ else:
                     zip_buffer.write(zip_file)
 
                     # Salvar o arquivo zip em um arquivo temporário
-                    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                        temp_file.write(zip_buffer.getvalue())
-                        temp_file_path = temp_file.name
+                    with tempfile.TemporaryDirectory() as temp_dir:
+                        temp_zip_path = os.path.join(temp_dir, "Unidades_BH_RS.zip")
+                        
+                        # Escrever o conteúdo do arquivo ZIP em um diretório temporário
+                        with open(temp_zip_path, "wb") as f:
+                            f.write(zip_buffer.getvalue())
 
-                # Ler o arquivo no caminho temporário
-                gdf = gpd.read_file(f"zip://{temp_file_path}")
+                        # Extrair o arquivo ZIP
+                        with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
+                            zip_ref.extractall(temp_dir)
 
-                # Adicionar o arquivo GeoDataFrame ao mapa
-                folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
+                        # Agora vamos tentar ler o arquivo .shp diretamente do diretório temporário
+                        shp_file_path = os.path.join(temp_dir, 'Unidades_BH_RS.shp')
 
-                # Adicionar um marcador no mapa
-                folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
+                        # Ler o arquivo shapefile usando geopandas
+                        gdf = gpd.read_file(shp_file_path)
+
+                        # Adicionar o arquivo GeoDataFrame ao mapa
+                        folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
+
+                        # Adicionar um marcador no mapa
+                        folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo SHP: {e}")
