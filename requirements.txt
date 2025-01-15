@@ -11,3 +11,4 @@ extra-streamlit-components
 streamlit-echarts
 requests
 pyogrio
+pydeck
