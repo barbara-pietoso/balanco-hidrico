@@ -1,3 +1,5 @@
+pip freeze
+
 from google.colab import drive
 import geopandas as gpd
 import pyogrio  # ou 'fiona'
