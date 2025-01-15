@@ -9,5 +9,5 @@ streamlit==1.26.0
 
 
 pip install "dask[dataframe]"
-pip install dask-expr
+
 
