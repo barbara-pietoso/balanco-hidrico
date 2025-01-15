@@ -16,12 +16,12 @@ import math
 # Configurações da página
 st.set_page_config(
     page_title="Vazão Outorgável",
-    page_icon="	:droplet:",
+    page_icon=":droplet:",
     layout="wide",
     initial_sidebar_state='collapsed'
 )
 
-col1, col2, col3 = st.columns([1,5,1], vertical_alignment="center")
+col1, col2, col3 = st.columns([1, 5, 1], vertical_alignment="center")
 
 col2.markdown("<h1 style='text-align: center;'>Consulta da Vazão Outorgável</h1>", unsafe_allow_html=True)
 col2.subheader("Insira as Coordenadas:")
@@ -29,12 +29,21 @@ col2.subheader("Insira as Coordenadas:")
 latitude = col2.number_input("Latitude", min_value=-90.0, max_value=90.0, step=0.0001, format="%.4f")
 longitude = col2.number_input("Longitude", min_value=-180.0, max_value=180.0, step=0.0001, format="%.4f")
 
+# URL do arquivo GeoJSON hospedado no Google Drive (link direto)
+file_url = "https://drive.google.com/uc?export=download&id=1--laLHmabXElImR5RT-j-c4FajYICPqJ"
+
 # Exibir as coordenadas inseridas
 if latitude and longitude:
     col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
 
     # Criar mapa centrado nas coordenadas inseridas
     mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
+
+    # Carregar o arquivo GeoJSON diretamente da URL
+    geojson_data = requests.get(file_url).json()
+
+    # Adicionar o arquivo GeoJSON ao mapa
+    folium.GeoJson(geojson_data).add_to(mapa)
 
     # Adicionar um marcador no mapa
     folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
