@@ -1,7 +1,6 @@
 geopandas
 pyogrio
 point
-glob
 dask.dataframe
 delayed
 pandas
