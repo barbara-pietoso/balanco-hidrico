@@ -6,7 +6,8 @@ import tempfile
 import os
 from io import BytesIO
 import streamlit as st
-import pydeck as pdk
+import folium
+from streamlit_folium import st_folium
 
 # Configurações da página
 st.set_page_config(
@@ -54,8 +55,8 @@ if enviar:
         if valida_coordenadas(latitude, longitude):
             col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
             
-            # Atualizar o mapa para centralizar nas coordenadas inseridas
-            view_state = pdk.ViewState(latitude=latitude, longitude=longitude, zoom=12)
+            # Criar o mapa usando o Folium com as coordenadas inseridas
+            mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
 
             try:
                 # Baixar o arquivo .zip
@@ -83,24 +84,11 @@ if enviar:
                         # Ler o arquivo shapefile usando geopandas
                         gdf = gpd.read_file(shp_file_path)
 
-                        # Convertendo os dados do GeoDataFrame para um formato utilizável pelo Deck.gl
-                        geojson_data = gdf.to_json()
+                        # Adicionar o arquivo GeoDataFrame ao mapa
+                        folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
 
-                        # Criar o mapa do OpenStreetMap usando o pydeck
-                        layer = pdk.Layer(
-                            "GeoJsonLayer",
-                            geojson_data,
-                            get_fill_color=[255, 0, 0, 160],  # Cor do preenchimento
-                            get_line_color=[0, 0, 0],         # Cor da linha
-                            get_line_width=1,
-                            pickable=True
-                        )
-
-                        # Adicionar a camada ao mapa
-                        r = pdk.Deck(layers=[layer], initial_view_state=view_state, map_style="mapbox://styles/mapbox/light-v10")
-
-                        # Exibir o mapa no Streamlit
-                        st.pydeck_chart(r)
+                        # Adicionar um marcador no mapa
+                        folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo SHP: {e}")
@@ -108,16 +96,18 @@ if enviar:
                 col2.write(f"Erro ao baixar ou extrair os arquivos: {e}")
         else:
             col2.write("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
-            # Manter o mapa padrão quando as coordenadas não são válidas
-            view_state = pdk.ViewState(latitude=default_latitude, longitude=default_longitude, zoom=7)
+            # Criar o mapa padrão quando as coordenadas não são válidas
+            mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
             col2.write("Mapa centralizado no Rio Grande do Sul.")
-            # Exibir o mapa do OpenStreetMap
-            r = pdk.Deck(layers=[], initial_view_state=view_state, map_style="mapbox://styles/mapbox/light-v10")
-            st.pydeck_chart(r)
+            # Adicionar um marcador no mapa
+            folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
     else:
         col2.write("Por favor, insira as coordenadas corretamente.")
-        # Manter o mapa padrão
-        view_state = pdk.ViewState(latitude=default_latitude, longitude=default_longitude, zoom=7)
-        # Exibir o mapa do OpenStreetMap
-        r = pdk.Deck(layers=[], initial_view_state=view_state, map_style="mapbox://styles/mapbox/light-v10")
-        st.pydeck_chart(r)
+        # Criar o mapa padrão
+        mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+        # Adicionar um marcador no mapa
+        folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
+
+# Exibir o mapa no Streamlit
+st_folium(mapa, width=700, height=500)
+
