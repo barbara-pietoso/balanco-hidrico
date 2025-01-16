@@ -1,4 +1,4 @@
-import pandas as pd 
+import pandas as pd
 import geopandas as gpd
 import requests
 import zipfile
@@ -48,6 +48,9 @@ default_longitude = -53.5
 
 # URL do arquivo .zip hospedado no GitHub
 zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/Unidades_BH_RS.zip"
+
+# Inicializar o mapa padrão com as coordenadas centrais do Rio Grande do Sul
+mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # Atualizar o mapa com as coordenadas inseridas
 if enviar:
