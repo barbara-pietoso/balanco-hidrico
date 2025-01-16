@@ -99,8 +99,8 @@ if enviar:
                         gdf = gpd.read_file(shp_file_path)
 
                         # Verificar se a coluna 'ID_balanco' existe no shapefile
-                        if 'ID_balanco' not in gdf.columns:
-                            col2.write("A coluna 'ID_balanco' não foi encontrada no shapefile.")
+                        if 'ID_Balanco' not in gdf.columns:
+                            col2.write("A coluna 'ID_Balanco' não foi encontrada no shapefile.")
                         else:
                             # Adicionar o arquivo GeoDataFrame ao mapa
                             folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
@@ -112,7 +112,7 @@ if enviar:
                             for _, row in gdf.iterrows():
                                 if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
                                     informacao_upg = f"UPG: {row['UPG']}"
-                                    id_balanco = row['ID_balanco']  # Pega o ID_balanco
+                                    id_balanco = row['ID_Balanco']  # Pega o ID_balanco
                                     break
                             else:
                                 informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
@@ -125,7 +125,7 @@ if enviar:
                                     tabela_id_balanco = pd.read_excel("tabela_id_balanco.xlsx")
 
                                     # Filtrar os dados pela coluna 'ID_balanco'
-                                    dados_filtrados = tabela_id_balanco[tabela_id_balanco['ID_balanco'] == id_balanco]
+                                    dados_filtrados = tabela_id_balanco[tabela_id_balanco['ID_Balanco'] == id_balanco]
 
                                     if not dados_filtrados.empty:
                                         # Obter os valores de Qesp e perc_out
