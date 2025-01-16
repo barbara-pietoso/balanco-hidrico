@@ -100,7 +100,7 @@ if enviar:
 
                         # Verificar se a coluna 'ID_balanco' existe no shapefile
                         if 'ID_balanco' not in gdf.columns:
-                            col2.write("A coluna 'ID_balanco' não foi encontrada no shapefile.")
+                            col2.write("A coluna 'ID_Balanco' não foi encontrada no shapefile.")
                         else:
                             # Adicionar o arquivo GeoDataFrame ao mapa
                             folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
@@ -112,7 +112,7 @@ if enviar:
                             for _, row in gdf.iterrows():
                                 if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
                                     informacao_upg = f"UPG: {row['UPG']}"
-                                    id_balanco = row['ID_balanco']  # Pega o ID_balanco
+                                    id_balanco = row['ID_Balanco']  # Pega o ID_balanco
                                     break
                             else:
                                 informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
@@ -134,7 +134,7 @@ if enviar:
                                     qout = calcular_qout(qesp, area, perc_out)
                                     informacao_upg += f"\nQesp: {qesp}\nPerc Out: {perc_out}\nQout: {qout}"
                                 else:
-                                    informacao_upg += "\nNão foram encontrados dados para o ID_balanco."
+                                    informacao_upg += "\nNão foram encontrados dados para o ID_Balanco."
 
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo SHP: {e}")
