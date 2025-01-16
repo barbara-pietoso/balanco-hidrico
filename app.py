@@ -112,7 +112,7 @@ if enviar:
                         for _, row in gdf.iterrows():
                             if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
                                 informacao_upg = f"UPG: {row['UPG']}"
-                                id_balanco = row['ID_balanco']  # Pega o ID_balanco
+                                id_balanco = row['ID_Balanco']  # Pega o ID_balanco
                                 break
                         else:
                             informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
@@ -124,7 +124,7 @@ if enviar:
                             tabela_dados = pd.read_csv("tabela_dados.csv")  # Carregar a tabela_dados
 
                             # Filtrar os dados pela ID_balanco
-                            dados_filtrados = tabela_dados[tabela_dados['ID_balanco'] == id_balanco]
+                            dados_filtrados = tabela_dados[tabela_dados['ID_Balanco'] == id_balanco]
 
                             if not dados_filtrados.empty:
                                 qesp = dados_filtrados.iloc[0]['Qesp']
