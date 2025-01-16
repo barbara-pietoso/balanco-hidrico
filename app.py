@@ -34,13 +34,14 @@ def valida_coordenadas(latitude, longitude):
 col1, col2, col3 = st.columns([1, 5, 1], vertical_alignment="center")
 
 col2.markdown("<h1 style='text-align: center;'>Consulta da Vazão Outorgável</h1>", unsafe_allow_html=True)
-col2.subheader("Insira as Coordenadas:")
+col2.subheader("Insira as Coordenadas e a Área:")
 
-# Campos para inserir coordenadas, inicialmente vazios
+# Campos para inserir coordenadas e área
 latitude = col2.number_input("Latitude", min_value=-90.0, max_value=90.0, step=0.0001, format="%.4f", value=None)
 longitude = col2.number_input("Longitude", min_value=-180.0, max_value=180.0, step=0.0001, format="%.4f", value=None)
+area = col2.number_input("Área (em km²)", min_value=0.0, step=0.1, format="%.1f", value=None)
 
-# Botão para enviar as coordenadas
+# Botão para enviar as coordenadas e a área
 enviar = col2.button("Enviar")
 
 # Coordenadas iniciais do centro do Rio Grande do Sul
@@ -55,12 +56,18 @@ mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
 # Inicializar uma variável para armazenar o texto a ser exibido
 informacao_upg = ""
+qout = None
+
+# Função para calcular Qout
+def calcular_qout(qesp, area, perc_out):
+    return qesp * area * perc_out
 
 # Atualizar o mapa com as coordenadas inseridas
 if enviar:
-    if latitude is not None and longitude is not None:
+    if latitude is not None and longitude is not None and area is not None:
         if valida_coordenadas(latitude, longitude):
             col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
+            col2.write(f"Área inserida: {area} km²")
             
             # Criar o mapa usando o Folium com as coordenadas inseridas
             mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
@@ -104,9 +111,29 @@ if enviar:
                         for _, row in gdf.iterrows():
                             if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
                                 informacao_upg = f"UPG: {row['UPG']}"
+                                id_balanco = row['ID_balanco']  # Pega o ID_balanco
                                 break
                         else:
                             informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
+                            id_balanco = None
+
+                        # Se o ID_balanco for encontrado, buscar as informações na tabela_dados
+                        if id_balanco:
+                            # Supondo que a tabela_dados é um DataFrame que já foi carregado
+                            tabela_dados = pd.read_csv("tabela_dados.csv")  # Carregar a tabela_dados
+
+                            # Filtrar os dados pela ID_balanco
+                            dados_filtrados = tabela_dados[tabela_dados['ID_balanco'] == id_balanco]
+
+                            if not dados_filtrados.empty:
+                                qesp = dados_filtrados.iloc[0]['Qesp']
+                                perc_out = dados_filtrados.iloc[0]['perc_out']
+
+                                # Calcular Qout
+                                qout = calcular_qout(qesp, area, perc_out)
+                                informacao_upg += f"\nQesp: {qesp}\nPerc Out: {perc_out}\nQout: {qout}"
+                            else:
+                                informacao_upg += "\nNão foram encontrados dados para o ID_balanco."
 
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo SHP: {e}")
@@ -120,15 +147,16 @@ if enviar:
             # Adicionar um marcador no mapa
             folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
     else:
-        col2.write("Por favor, insira as coordenadas corretamente.")
+        col2.write("Por favor, insira as coordenadas e a área corretamente.")
         # Criar o mapa padrão
         mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
         # Adicionar um marcador no mapa
         folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
 
-# Exibir a informação da coluna 'UPG'
+# Exibir a informação da coluna 'UPG' e o cálculo de Qout
 col2.write(informacao_upg)
 
 # Salvar o mapa como HTML e exibi-lo no Streamlit
 mapa_html = mapa._repr_html_()
 html(mapa_html, height=500)
+
