@@ -31,7 +31,6 @@ def valida_coordenadas(latitude, longitude):
     else:
         return False
 
-
 col1, col2, col3 = st.columns([1, 5, 1], vertical_alignment="center")
 
 col2.markdown("<h1 style='text-align: center;'>Consulta da Vazão Outorgável</h1>", unsafe_allow_html=True)
@@ -99,42 +98,43 @@ if enviar:
                         # Ler o arquivo shapefile usando geopandas
                         gdf = gpd.read_file(shp_file_path)
 
-                        # Adicionar o arquivo GeoDataFrame ao mapa
-                        folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
-
-                        # Adicionar um marcador no mapa
-                        folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
-
-                        # Criar um ponto com as coordenadas inseridas
-                        ponto = Point(longitude, latitude)
-
-                        # Verificar se o ponto está dentro de algum polígono
-                        for _, row in gdf.iterrows():
-                            if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
-                                informacao_upg = f"UPG: {row['UPG']}"
-                                id_balanco = row['ID_Balanco']  # Pega o ID_balanco
-                                break
+                        # Verificar se a coluna 'ID_balanco' existe no shapefile
+                        if 'ID_balanco' not in gdf.columns:
+                            col2.write("A coluna 'ID_balanco' não foi encontrada no shapefile.")
                         else:
-                            informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
-                            id_balanco = None
+                            # Adicionar o arquivo GeoDataFrame ao mapa
+                            folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
 
-                        # Se o ID_balanco for encontrado, buscar as informações na tabela_dados
-                        if id_balanco:
-                            # Supondo que a tabela_dados é um DataFrame que já foi carregado
-                            tabela_dados = pd.read_csv("tabela_dados.csv")  # Carregar a tabela_dados
+                            # Criar um ponto com as coordenadas inseridas
+                            ponto = Point(longitude, latitude)
 
-                            # Filtrar os dados pela ID_balanco
-                            dados_filtrados = tabela_dados[tabela_dados['ID_Balanco'] == id_balanco]
-
-                            if not dados_filtrados.empty:
-                                qesp = dados_filtrados.iloc[0]['Qesp']
-                                perc_out = dados_filtrados.iloc[0]['perc_out']
-
-                                # Calcular Qout
-                                qout = calcular_qout(qesp, area, perc_out)
-                                informacao_upg += f"\nQesp: {qesp}\nPerc Out: {perc_out}\nQout: {qout}"
+                            # Verificar se o ponto está dentro de algum polígono
+                            for _, row in gdf.iterrows():
+                                if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
+                                    informacao_upg = f"UPG: {row['UPG']}"
+                                    id_balanco = row['ID_balanco']  # Pega o ID_balanco
+                                    break
                             else:
-                                informacao_upg += "\nNão foram encontrados dados para o ID_balanco."
+                                informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
+                                id_balanco = None
+
+                            # Se o ID_balanco for encontrado, buscar as informações na tabela_dados
+                            if id_balanco:
+                                # Supondo que a tabela_dados seja um DataFrame que já foi carregado
+                                tabela_dados = pd.read_csv("tabela_dados.csv")  # Carregar a tabela_dados
+
+                                # Filtrar os dados pela ID_balanco
+                                dados_filtrados = tabela_dados[tabela_dados['ID_balanco'] == id_balanco]
+
+                                if not dados_filtrados.empty:
+                                    qesp = dados_filtrados.iloc[0]['Qesp']
+                                    perc_out = dados_filtrados.iloc[0]['perc_out']
+
+                                    # Calcular Qout
+                                    qout = calcular_qout(qesp, area, perc_out)
+                                    informacao_upg += f"\nQesp: {qesp}\nPerc Out: {perc_out}\nQout: {qout}"
+                                else:
+                                    informacao_upg += "\nNão foram encontrados dados para o ID_balanco."
 
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo SHP: {e}")
@@ -160,4 +160,6 @@ col2.write(informacao_upg)
 # Salvar o mapa como HTML e exibi-lo no Streamlit
 mapa_html = mapa._repr_html_()
 html(mapa_html, height=500)
+
+
 
