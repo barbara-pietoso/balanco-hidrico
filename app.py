@@ -8,6 +8,7 @@ from io import BytesIO
 import streamlit as st
 import folium
 from streamlit.components.v1 import html  # Para exibir o mapa como HTML
+from shapely.geometry import Point
 
 # Configurações da página
 st.set_page_config(
@@ -52,6 +53,9 @@ zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/Unidades_
 # Inicializar o mapa padrão com as coordenadas centrais do Rio Grande do Sul
 mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
 
+# Inicializar uma variável para armazenar o texto a ser exibido
+informacao_upg = ""
+
 # Atualizar o mapa com as coordenadas inseridas
 if enviar:
     if latitude is not None and longitude is not None:
@@ -93,6 +97,17 @@ if enviar:
                         # Adicionar um marcador no mapa
                         folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
+                        # Criar um ponto com as coordenadas inseridas
+                        ponto = Point(longitude, latitude)
+
+                        # Verificar se o ponto está dentro de algum polígono
+                        for _, row in gdf.iterrows():
+                            if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
+                                informacao_upg = f"UPG: {row['UPG']}"
+                                break
+                        else:
+                            informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
+
             except requests.exceptions.RequestException as e:
                 col2.write(f"Erro ao carregar o arquivo SHP: {e}")
             except Exception as e:
@@ -110,6 +125,9 @@ if enviar:
         mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
         # Adicionar um marcador no mapa
         folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
+
+# Exibir a informação da coluna 'UPG'
+col2.write(informacao_upg)
 
 # Salvar o mapa como HTML e exibi-lo no Streamlit
 mapa_html = mapa._repr_html_()
