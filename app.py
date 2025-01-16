@@ -19,10 +19,10 @@ st.set_page_config(
 )
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
-LAT_MIN = -34.0  # Latitude mínima
-LAT_MAX = -28.0  # Latitude máxima
-LON_MIN = -54.5  # Longitude mínima
-LON_MAX = -49.0  # Longitude máxima
+LAT_MIN = -33.75  # Latitude mínima (ajustada)
+LAT_MAX = -27.5   # Latitude máxima (ajustada)
+LON_MIN = -54.5   # Longitude mínima
+LON_MAX = -49.0   # Longitude máxima
 
 # Função para validar se as coordenadas estão dentro dos limites do Rio Grande do Sul
 def valida_coordenadas(latitude, longitude):
@@ -30,6 +30,7 @@ def valida_coordenadas(latitude, longitude):
         return True
     else:
         return False
+
 
 col1, col2, col3 = st.columns([1, 5, 1], vertical_alignment="center")
 
