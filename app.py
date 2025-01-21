@@ -31,7 +31,7 @@ def valida_coordenadas(latitude, longitude):
     else:
         return False
 
-col1, col2, col3 = st.columns([1, 5, 1], vertical_alignment="center")
+col1, col2, col3 = st.columns([1, 4, 1], vertical_alignment="center")
 
 col2.markdown("<h1 style='text-align: center;'>Consulta da Vazão Outorgável</h1>", unsafe_allow_html=True)
 col2.subheader("Insira as Coordenadas e a Área:")
@@ -64,14 +64,11 @@ def calcular_qout(qesp, area, perc_out):
 
 # Atualizar o mapa com as coordenadas inseridas
 if enviar:
-    if latitude is not None and longitude is not None and area is not None:
+    if latitude != 0.0 and longitude != 0.0 and area != 0.0:
         if valida_coordenadas(latitude, longitude):
             col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
             col2.write(f"Área inserida: {area} km²")
             
-            # Criar o mapa usando o Folium com as coordenadas inseridas
-            mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
-
             try:
                 # Baixar o arquivo .zip
                 zip_file = requests.get(zip_url).content
@@ -93,7 +90,7 @@ if enviar:
                             zip_ref.extractall(temp_dir)
 
                         # Agora vamos tentar ler o arquivo .shp diretamente do diretório temporário
-                        shp_file_path = os.path.join(temp_dir, 'arquivos_shape.zip')
+                        shp_file_path = os.path.join(temp_dir, 'UNIDADES_BH_RS_NOVO.shp')
 
                         # Ler o arquivo shapefile usando geopandas
                         gdf = gpd.read_file(shp_file_path)
@@ -151,7 +148,12 @@ if enviar:
             mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
             col2.write("Mapa centralizado no Rio Grande do Sul.")
             # Adicionar um marcador no mapa
-            folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
+            folium.Marker(
+                [default_latitude, default_longitude],
+                popup="Erro: Verifique os dados inseridos ou os arquivos carregados.",
+                icon=folium.Icon(color="red")
+            ).add_to(mapa)
+
     else:
         col2.write("Por favor, insira as coordenadas e a área corretamente.")
         # Criar o mapa padrão
