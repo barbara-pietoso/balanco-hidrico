@@ -62,108 +62,63 @@ qout = None
 def calcular_qout(qesp, area, perc_out):
     return qesp * area * perc_out
 
-# Atualizar o mapa com as coordenadas inseridas
 if enviar:
-    if latitude != 0.0 and longitude != 0.0 and area != 0.0:
+    if latitude is not None and longitude is not None and area is not None:
         if valida_coordenadas(latitude, longitude):
             col2.write(f"Coordenadas inseridas: {latitude}, {longitude}")
             col2.write(f"Área inserida: {area} km²")
-            
+
+            # Criar o mapa usando Folium com as coordenadas inseridas
+            mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
+
             try:
-                # Baixar o arquivo .zip
+                # Baixar e extrair o arquivo shapefile do GitHub
                 zip_file = requests.get(zip_url).content
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    # Salvar o arquivo ZIP temporariamente
+                    zip_path = os.path.join(temp_dir, "shapefile.zip")
+                    with open(zip_path, "wb") as f:
+                        f.write(zip_file)
 
-                # Criar um arquivo ZIP em memória
-                with BytesIO() as zip_buffer:
-                    zip_buffer.write(zip_file)
+                    # Extrair o conteúdo do ZIP
+                    with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                        zip_ref.extractall(temp_dir)
 
-                    # Salvar o arquivo zip em um arquivo temporário
-                    with tempfile.TemporaryDirectory() as temp_dir:
-                        temp_zip_path = os.path.join(temp_dir, "arquivos_shape.zip")
-                        
-                        # Escrever o conteúdo do arquivo ZIP em um diretório temporário
-                        with open(temp_zip_path, "wb") as f:
-                            f.write(zip_buffer.getvalue())
+                    # Caminho para o shapefile extraído
+                    shp_file_path = os.path.join(temp_dir, "UNIDADES_BH_RS_NOVO.shp")
 
-                        # Extrair o arquivo ZIP
-                        with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
-                            zip_ref.extractall(temp_dir)
+                    # Carregar o shapefile como GeoDataFrame
+                    gdf = gpd.read_file(shp_file_path)
 
-                        # Agora vamos tentar ler o arquivo .shp diretamente do diretório temporário
-                        shp_file_path = os.path.join(temp_dir, 'UNIDADES_BH_RS_NOVO.shp')
+                    # Certificar-se de que o shapefile está em WGS84
+                    if gdf.crs.to_string() != "EPSG:4326":
+                        gdf = gdf.to_crs("EPSG:4326")
 
-                        # Ler o arquivo shapefile usando geopandas
-                        gdf = gpd.read_file(shp_file_path)
+                    # Criar um ponto com as coordenadas inseridas
+                    ponto = Point(longitude, latitude)
 
-                        # Verificar se a coluna 'ID_balanco' existe no shapefile
-                        if 'ID_Balanco' not in gdf.columns:
-                            col2.write("A coluna 'ID_Balanco' não foi encontrada no shapefile.")
-                        else:
-                            # Adicionar o arquivo GeoDataFrame ao mapa
-                            folium.GeoJson(gdf.__geo_interface__).add_to(mapa)
+                    # Verificar em qual polígono o ponto está
+                    for _, row in gdf.iterrows():
+                        if row['geometry'].contains(ponto):
+                            informacao_upg = f"UPG: {row['UPG']}"  # Substitua 'UPG' pela coluna correta
+                            # Adicionar o polígono correspondente ao mapa
+                            folium.GeoJson(row['geometry'].__geo_interface__,
+                                           style_function=lambda x: {'fillColor': 'blue', 'color': 'blue'}).add_to(mapa)
+                            break
+                    else:
+                        informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
 
-                            # Criar um ponto com as coordenadas inseridas
-                            ponto = Point(longitude, latitude)
-
-                            # Verificar se o ponto está dentro de algum polígono
-                            for _, row in gdf.iterrows():
-                                if row['geometry'].contains(ponto):  # Verifica se o ponto está dentro do polígono
-                                    informacao_upg = f"UPG: {row['UPG']}"
-                                    id_balanco = row['ID_Balanco']  # Pega o ID_balanco
-                                    break
-                            else:
-                                informacao_upg = "O ponto inserido não está dentro de nenhuma unidade."
-                                id_balanco = None
-
-                            # Se o ID_balanco for encontrado, buscar as informações na tabela_id_balanco.xlsx
-                            if id_balanco:
-                                try:
-                                    # Carregar a tabela_id_balanco.xlsx
-                                    tabela_id_balanco = pd.read_excel("tabela_id_balanco.xlsx")
-
-                                    # Filtrar os dados pela coluna 'ID_balanco'
-                                    dados_filtrados = tabela_id_balanco[tabela_id_balanco['ID_Balanco'] == id_balanco]
-
-                                    if not dados_filtrados.empty:
-                                        # Obter os valores de Qesp e perc_out
-                                        qesp = dados_filtrados.iloc[0]['Qesp']
-                                        perc_out = dados_filtrados.iloc[0]['perc_out']
-
-                                        # Calcular Qout
-                                        qout = calcular_qout(qesp, area, perc_out)
-                                        informacao_upg += f"\nQesp: {qesp}\nPerc Out: {perc_out}\nQout: {qout}"
-                                    else:
-                                        informacao_upg += "\nNão foram encontrados dados para o ID_balanco."
-
-                                except Exception as e:
-                                    informacao_upg += f"\nErro ao acessar a tabela_id_balanco.xlsx: {e}"
-
-            except requests.exceptions.RequestException as e:
-                col2.write(f"Erro ao carregar o arquivo SHP: {e}")
             except Exception as e:
-                col2.write(f"Erro ao baixar ou extrair os arquivos: {e}")
+                informacao_upg = f"Erro ao processar o shapefile: {e}"
         else:
-            col2.write("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
-            # Criar o mapa padrão quando as coordenadas não são válidas
-            mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
-            col2.write("Mapa centralizado no Rio Grande do Sul.")
-            # Adicionar um marcador no mapa
-            folium.Marker(
-                [default_latitude, default_longitude],
-                popup="Erro: Verifique os dados inseridos ou os arquivos carregados.",
-                icon=folium.Icon(color="red")
-            ).add_to(mapa)
-
+            informacao_upg = "As coordenadas inseridas estão fora dos limites do Rio Grande do Sul."
     else:
-        col2.write("Por favor, insira as coordenadas e a área corretamente.")
-        # Criar o mapa padrão
-        mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
-        # Adicionar um marcador no mapa
-        folium.Marker([default_latitude, default_longitude], popup="Centro do Rio Grande do Sul").add_to(mapa)
+        informacao_upg = "Por favor, insira as coordenadas e a área corretamente."
 
-# Exibir a informação da coluna 'UPG' e o cálculo de Qout
+# Exibir as informações
 col2.write(informacao_upg)
 
 # Salvar o mapa como HTML e exibi-lo no Streamlit
 mapa_html = mapa._repr_html_()
 html(mapa_html, height=500)
+
