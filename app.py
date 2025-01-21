@@ -49,7 +49,7 @@ default_latitude = -30.0
 default_longitude = -53.5
 
 # URL do arquivo .zip hospedado no GitHub
-zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/Unidades_BH_RS.zip"
+zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape.zip"
 
 # Inicializar o mapa padrão com as coordenadas centrais do Rio Grande do Sul
 mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
@@ -82,7 +82,7 @@ if enviar:
 
                     # Salvar o arquivo zip em um arquivo temporário
                     with tempfile.TemporaryDirectory() as temp_dir:
-                        temp_zip_path = os.path.join(temp_dir, "Unidades_BH_RS.zip")
+                        temp_zip_path = os.path.join(temp_dir, "arquivos_shape.zip")
                         
                         # Escrever o conteúdo do arquivo ZIP em um diretório temporário
                         with open(temp_zip_path, "wb") as f:
@@ -93,7 +93,7 @@ if enviar:
                             zip_ref.extractall(temp_dir)
 
                         # Agora vamos tentar ler o arquivo .shp diretamente do diretório temporário
-                        shp_file_path = os.path.join(temp_dir, 'Unidades_BH_RS.shp')
+                        shp_file_path = os.path.join(temp_dir, 'arquivos_shape.zip')
 
                         # Ler o arquivo shapefile usando geopandas
                         gdf = gpd.read_file(shp_file_path)
