@@ -154,3 +154,4 @@ mapa_html = mapa._repr_html_()
 with col2:
     html(mapa_html, width=1000, height=600)
 
+
