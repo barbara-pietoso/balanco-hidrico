@@ -104,11 +104,11 @@ if enviar:
                         # Procurar o valor correspondente à unidade
                         unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
 
-                            if not unidade_data.empty:
-                                try:
-                                    area_qesp_rio = unidade_data.get('area_qesp_rio', pd.NA).values[0]
-                                    area_drenagem = unidade_data.get('Área de drenagem (km²)', pd.NA).values[0]
-    
+                        if not unidade_data.empty:
+                            try:
+                                area_qesp_rio = unidade_data.get('area_qesp_rio', pd.NA).values[0]
+                                area_drenagem = unidade_data.get('Área de drenagem (km²)', pd.NA).values[0]
+
                                 # Validar se área de drenagem está presente
                                 if pd.isna(area_drenagem):
                                     col1.error("Área de drenagem não disponível para essa unidade.")
@@ -127,7 +127,7 @@ if enviar:
                                                 qesp_valor = unidade_data.get('Qesp_maior10', pd.NA).values[0]
                                             else:
                                                 qesp_valor = unidade_data.get('Qesp_menor10', pd.NA).values[0]
-                        
+
                                     # Verificar se o valor da Qesp foi calculado corretamente
                                     if pd.isna(qesp_valor):
                                         col1.error("Valor da Qesp não disponível para essa unidade.")
@@ -138,30 +138,6 @@ if enviar:
                                         col1.success(f"A Vazão de referência para sua localidade é: {valor_m3_s:.10f} m³/s")
                             except Exception as e:
                                 col1.error(f"Erro no cálculo dos valores: {e}")
-                    else:
-                        col1.warning("Nenhum dado encontrado para o ID_Balanco.")
-
-                            if pd.isna(area_qesp_rio):
-                                # Se a coluna "area_qesp_rio" estiver em branco
-                                if area > 10:
-                                    qesp_valor = unidade_data['Qesp_maior10'].values[0]
-                                else:
-                                    qesp_valor = unidade_data['Qesp_menor10'].values[0]
-                            else:
-                                # Se a coluna "area_qesp_rio" não estiver em branco
-                                if area > area_qesp_rio:
-                                    qesp_valor = unidade_data['Qesp_rio'].values[0]
-                                else:
-                                    if area > 10:
-                                        qesp_valor = unidade_data['Qesp_maior10'].values[0]
-                                    else:
-                                        qesp_valor = unidade_data['Qesp_menor10'].values[0]
-
-                            # Cálculo do valor em m³/s
-                            valor_m3_s = qesp_valor * area_drenagem
-
-                            # Retornar o valor calculado
-                            col1.success(f"A Vazão de referência para a sua localidade é: {valor_m3_s:.8f} m³/s")
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
@@ -176,6 +152,5 @@ if enviar:
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
 with col2:
-    html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
-
+    html(mapa_html, width=1000, height=600)
 
