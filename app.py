@@ -1,50 +1,3 @@
-import streamlit as st
-import folium
-import geopandas as gpd
-from shapely.geometry import Point
-import requests
-import zipfile
-import os
-import tempfile
-import pandas as pd
-from streamlit.components.v1 import html
-
-# Configurações da página
-st.set_page_config(
-    page_title="Consulta de Unidades",
-    page_icon=":world_map:",
-    layout="wide"
-)
-
-# Limites aproximados de latitude e longitude do Rio Grande do Sul
-LAT_MIN = -33.75  # Latitude mínima
-LAT_MAX = -27.5   # Latitude máxima
-LON_MIN = -54.5   # Longitude mínima
-LON_MAX = -49.0   # Longitude máxima
-
-# URL do arquivo .zip hospedado no GitHub
-zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape_upg.zip"
-
-# Função para validar se as coordenadas estão dentro dos limites do Rio Grande do Sul
-def valida_coordenadas(latitude, longitude):
-    return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
-
-# Layout do título no topo
-st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outórga</h1>", unsafe_allow_html=True)
-
-# Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
-
-# Entradas de latitude, longitude e área
-with col1:
-    latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
-    longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
-    area_input = st.text_input("Área (em km²)", placeholder="Insira a área em km²")
-    enviar = st.button("Exibir no Mapa")
-
-# Inicializar o mapa centralizado no Rio Grande do Sul
-mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
-
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
     try:
@@ -95,43 +48,53 @@ if enviar:
                             ).add_to(mapa)
                             unidade_encontrada = row['ID_Balanco']  # Armazenar o ID_Balanco
                             break
-                    
+
                     if unidade_encontrada:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
                         tabela_path = "tabela_id_balanco.xlsx"  # Caminho para a planilha
                         tabela_df = pd.read_excel(tabela_path)
-                    
+
                         # Procurar o valor correspondente à unidade
                         unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
-                    
+
                         if not unidade_data.empty:
-                            # **INSERIR O NOVO TRECHO AQUI**
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
-                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0]  # Obter a área de drenagem da unidade
-                    
+
                             if pd.isna(area_qesp_rio):
                                 # Se a coluna "area_qesp_rio" estiver em branco
                                 if area > 10:
                                     qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                 else:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                                col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor}")
                             else:
                                 # Se a coluna "area_qesp_rio" não estiver em branco
                                 if area > area_qesp_rio:
+                                    # Se a área inserida for maior que a área da unidade
                                     qesp_valor = unidade_data['Qesp_rio'].values[0]
+                                    col1.success(f"O valor de Qesp para sua área é: {qesp_valor}")
                                 else:
+                                    # Se a área inserida for menor ou igual à área da unidade
                                     if area > 10:
                                         qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                     else:
                                         qesp_valor = unidade_data['Qesp_menor10'].values[0]
-                    
-                            # Cálculo do valor em m³/s
-                            valor_m3_s = qesp_valor * area_drenagem
-                    
-                            # Retornar o valor calculado
-                            col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor:.2f} m³/(s·km²)")
-                            col1.success(f"O valor multiplicado pela área de drenagem é: {valor_m3_s:.2f} m³/s")
+                                    col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor}")
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
                         col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
+
+            except Exception as e:
+                col1.error(f"Erro ao carregar o shapefile: {e}")
+        else:
+            col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
+
+    except ValueError:
+        col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
+
+# Renderizar o mapa no Streamlit
+mapa_html = mapa._repr_html_()
+with col2:
+    html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
+
