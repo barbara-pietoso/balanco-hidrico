@@ -128,8 +128,8 @@ if enviar:
                             valor_m3_s = qesp_valor * area_drenagem
 
                             # Retornar o valor calculado
-                            col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor:.2f} m³/(s·km²)")
-                            col1.success(f"O valor multiplicado pela área de drenagem é: {valor_m3_s:.2f} m³/s")
+                            col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor:.8f} m³/(s·km²)")
+                            col1.success(f"O valor multiplicado pela área de drenagem é: {valor_m3_s:.8f} m³/s")
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
