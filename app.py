@@ -11,7 +11,7 @@ from streamlit.components.v1 import html
 
 # Configurações da página
 st.set_page_config(
-    page_title="Consulta de Unidades",
+    page_title="Disponibilidade Hídrica para Outórga",
     page_icon=":world_map:",
     layout="wide"
 )
