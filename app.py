@@ -81,14 +81,22 @@ if enviar:
                     # Adicionar o ponto ao mapa
                     folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
-                    # Destacar a unidade que contém o ponto
+                    # Destacar a unidade que contém o ponto e exibir a UPG
+                    unidade_encontrada = None
                     for _, row in gdf.iterrows():
                         if row['geometry'].contains(ponto):
+                            # Destacar a unidade
                             folium.GeoJson(
                                 row['geometry'].__geo_interface__,
                                 style_function=lambda x: {'fillColor': 'blue', 'color': 'blue', 'weight': 2, 'fillOpacity': 0.5}
                             ).add_to(mapa)
+                            unidade_encontrada = row['UPG']  # Armazenar a UPG
                             break
+
+                    if unidade_encontrada:
+                        col1.success(f"A coordenada inserida está localizada na UPG: {unidade_encontrada}")
+                    else:
+                        col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
 
             except Exception as e:
                 col1.error(f"Erro ao carregar o shapefile: {e}")
@@ -102,3 +110,4 @@ if enviar:
 mapa_html = mapa._repr_html_()
 with col2:
     html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
+
