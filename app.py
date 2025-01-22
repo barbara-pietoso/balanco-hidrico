@@ -40,12 +40,8 @@ longitude = col2.number_input("Longitude", min_value=-180.0, max_value=180.0, st
 # Botão de envio
 enviar = col2.button("Exibir no Mapa")
 
-# Coordenadas iniciais do centro do Rio Grande do Sul
-default_latitude = -30.0
-default_longitude = -53.5
-
-# Inicializar o mapa padrão
-mapa = folium.Map(location=[default_latitude, default_longitude], zoom_start=7)
+# Inicializar o mapa centralizado no Rio Grande do Sul
+mapa = folium.Map(location=[-30.0, -53.5], zoom_start=7)
 
 if enviar:
     if valida_coordenadas(latitude, longitude):
