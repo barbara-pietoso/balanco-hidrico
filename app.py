@@ -22,7 +22,7 @@ LON_MIN = -54.5   # Longitude mínima
 LON_MAX = -49.0   # Longitude máxima
 
 # URL do arquivo .zip hospedado no GitHub
-zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape_upg.zip"
+zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape.zip"
 
 # Função para validar se as coordenadas estão dentro dos limites do Rio Grande do Sul
 def valida_coordenadas(latitude, longitude):
@@ -31,18 +31,22 @@ def valida_coordenadas(latitude, longitude):
 # Layout de colunas
 col1, col2, col3 = st.columns([1, 4, 1])
 
+# Título
 col2.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
 
-# Entrada de coordenadas com mensagens de placeholder
-latitude_input = col2.text_input("Latitude", placeholder="Insira uma latitude")
-longitude_input = col2.text_input("Longitude", placeholder="Insira uma longitude")
+# Layout de colunas ajustado
+col1, col2 = st.columns([1, 3])
 
-# Botão de envio
-enviar = col2.button("Exibir no Mapa")
+# Entradas de latitude e longitude no lado esquerdo
+with col1:
+    latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
+    longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
+    enviar = st.button("Exibir no Mapa")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa = folium.Map(location=[-30.0, -53.5], zoom_start=7)
 
+# Lógica para exibição do mapa
 if enviar:
     try:
         # Tentar converter os valores inseridos para float
@@ -90,12 +94,12 @@ if enviar:
                             break
 
             except Exception as e:
-                col2.error(f"Erro ao carregar o shapefile: {e}")
+                col1.error(f"Erro ao carregar o shapefile: {e}")
         else:
-            col2.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
+            col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
 
     except ValueError:
-        col2.error("Por favor, insira valores numéricos válidos para latitude e longitude.")
+        col1.error("Por favor, insira valores numéricos válidos para latitude e longitude.")
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
