@@ -23,14 +23,14 @@ LON_MIN = -54.5   # Longitude mínima
 LON_MAX = -49.0   # Longitude máxima
 
 # URL do arquivo .zip hospedado no GitHub
-zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape_upg.zip"
+zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape.zip"
 
 # Função para validar se as coordenadas estão dentro dos limites do Rio Grande do Sul
 def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
 # Layout do título no topo
-st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outórga</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
 col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
@@ -108,14 +108,17 @@ if enviar:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
 
                             if pd.isna(area_qesp_rio):
-                                col1.warning("A área da unidade está em branco.")
-                            else:
+                                # Se a coluna "area_qesp_rio" estiver em branco
                                 if area > 10:
                                     qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                 else:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
 
-                                col1.success(f"O valor da Qesp para a unidade é: {qesp_valor}")
+                                col1.success(f"O valor da Qesp para a unidade (sem área) é: {qesp_valor}")
+                            else:
+                                # Se a coluna "area_qesp_rio" não estiver em branco
+                                # Aqui você pode adicionar a lógica para quando a área não for em branco, conforme solicitado
+                                col1.success(f"A área da unidade é: {area_qesp_rio}")
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
@@ -133,3 +136,4 @@ if enviar:
 mapa_html = mapa._repr_html_()
 with col2:
     html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
+
