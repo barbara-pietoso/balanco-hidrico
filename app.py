@@ -135,4 +135,3 @@ if enviar:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
                         col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
-
