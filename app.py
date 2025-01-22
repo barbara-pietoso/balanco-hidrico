@@ -22,7 +22,7 @@ LON_MIN = -54.5   # Longitude mínima
 LON_MAX = -49.0   # Longitude máxima
 
 # URL do arquivo .zip hospedado no GitHub
-zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape.zip"
+zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape_upg.zip"
 
 # Função para validar se as coordenadas estão dentro dos limites do Rio Grande do Sul
 def valida_coordenadas(latitude, longitude):
