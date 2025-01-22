@@ -30,7 +30,7 @@ def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
 # Layout do título no topo
-st.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outórga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
 col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
@@ -113,12 +113,20 @@ if enviar:
                                     qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                 else:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
-
-                                col1.success(f"O valor da Qesp para a unidade (sem área) é: {qesp_valor}")
+                                col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor}")
                             else:
                                 # Se a coluna "area_qesp_rio" não estiver em branco
-                                # Aqui você pode adicionar a lógica para quando a área não for em branco, conforme solicitado
-                                col1.success(f"A área da unidade é: {area_qesp_rio}")
+                                if area > area_qesp_rio:
+                                    # Se a área inserida for maior que a área da unidade
+                                    qesp_valor = unidade_data['Qesp_rio'].values[0]
+                                    col1.success(f"O valor de Qesp para sua área é: {qesp_valor}")
+                                else:
+                                    # Se a área inserida for menor ou igual à área da unidade
+                                    if area > 10:
+                                        qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                                    else:
+                                        qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                                    col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor}")
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
