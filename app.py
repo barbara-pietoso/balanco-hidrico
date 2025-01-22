@@ -96,42 +96,44 @@ if enviar:
                             break
 
                     if unidade_encontrada:
-                        # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
-                        tabela_path = "tabela_id_balanco.xlsx"  # Caminho para a planilha
-                        tabela_df = pd.read_excel(tabela_path)
-
-                        # Procurar o valor correspondente à unidade
-                        unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
-
-                            # Modificação dentro da lógica principal, onde o valor de Qesp é calculado
-                        if not unidade_data.empty:
-                            area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
-                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0]  # Obter a área de drenagem da unidade
-                        
-                            if pd.isna(area_qesp_rio):
-                                # Se a coluna "area_qesp_rio" estiver em branco
+                    # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
+                    tabela_path = "tabela_id_balanco.xlsx"  # Caminho para a planilha
+                    tabela_df = pd.read_excel(tabela_path)
+                
+                    # Procurar o valor correspondente à unidade
+                    unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
+                
+                    if not unidade_data.empty:
+                        area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
+                        area_drenagem = unidade_data['Área de drenagem (km²)'].values[0]  # Obter a área de drenagem da unidade
+                
+                        if pd.isna(area_qesp_rio):
+                            # Se a coluna "area_qesp_rio" estiver em branco
+                            if area > 10:
+                                qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                            else:
+                                qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                        else:
+                            # Se a coluna "area_qesp_rio" não estiver em branco
+                            if area > area_qesp_rio:
+                                qesp_valor = unidade_data['Qesp_rio'].values[0]
+                            else:
                                 if area > 10:
                                     qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                 else:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
-                            else:
-                                # Se a coluna "area_qesp_rio" não estiver em branco
-                                if area > area_qesp_rio:
-                                    qesp_valor = unidade_data['Qesp_rio'].values[0]
-                                else:
-                                    if area > 10:
-                                        qesp_valor = unidade_data['Qesp_maior10'].values[0]
-                                    else:
-                                        qesp_valor = unidade_data['Qesp_menor10'].values[0]
-                        
-                            # Cálculo do valor em m³/s
-                            valor_m3_s = qesp_valor * area_drenagem
-                        
-                            # Retornar o valor calculado
-                            col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor:.2f} m³/(s·km²)")
-                            col1.success(f"O valor multiplicado pela área de drenagem é: {valor_m3_s:.2f} m³/s")
-                        else:
-                            col1.warning("ID_Balanco não encontrado na planilha.")
+                
+                        # Cálculo do valor em m³/s
+                        valor_m3_s = qesp_valor * area_drenagem
+                
+                        # Retornar o valor calculado
+                        col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor:.2f} m³/(s·km²)")
+                        col1.success(f"O valor multiplicado pela área de drenagem é: {valor_m3_s:.2f} m³/s")
+                    else:
+                        col1.warning("ID_Balanco não encontrado na planilha.")
+                else:
+                    col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
+
                         
                                     except Exception as e:
                                         col1.error(f"Erro ao carregar o shapefile: {e}")
