@@ -41,7 +41,7 @@ with col1:
     enviar = st.button("Exibir no Mapa")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
-mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.3)
+mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
 
 # Lógica para exibição do mapa
 if enviar:
@@ -101,4 +101,4 @@ if enviar:
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
 with col2:
-    html(mapa_html, height=600)  # Renderiza o mapa na segunda coluna
+    html(mapa_html, width=600, height=400)  # Renderiza o mapa na segunda coluna
