@@ -32,7 +32,7 @@ def valida_coordenadas(latitude, longitude):
 st.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col1, col2 = st.columns([1, 3])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
+col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
 
 # Entradas de latitude e longitude
 with col1:
