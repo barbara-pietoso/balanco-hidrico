@@ -103,41 +103,43 @@ if enviar:
                         # Procurar o valor correspondente à unidade
                         unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
 
-                        if not unidade_data.empty:
-                            area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
-
-                            if pd.isna(area_qesp_rio):
-                                # Se a coluna "area_qesp_rio" estiver em branco
+                        # Modificação dentro da lógica principal, onde o valor de Qesp é calculado
+                    if not unidade_data.empty:
+                        area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
+                        area_drenagem = unidade_data['Área de drenagem (km²)'].values[0]  # Obter a área de drenagem da unidade
+                    
+                        if pd.isna(area_qesp_rio):
+                            # Se a coluna "area_qesp_rio" estiver em branco
+                            if area > 10:
+                                qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                            else:
+                                qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                        else:
+                            # Se a coluna "area_qesp_rio" não estiver em branco
+                            if area > area_qesp_rio:
+                                qesp_valor = unidade_data['Qesp_rio'].values[0]
+                            else:
                                 if area > 10:
                                     qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                 else:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
-                                col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor}")
-                            else:
-                                # Se a coluna "area_qesp_rio" não estiver em branco
-                                if area > area_qesp_rio:
-                                    # Se a área inserida for maior que a área da unidade
-                                    qesp_valor = unidade_data['Qesp_rio'].values[0]
-                                    col1.success(f"O valor de Qesp para sua área é: {qesp_valor}")
-                                else:
-                                    # Se a área inserida for menor ou igual à área da unidade
-                                    if area > 10:
-                                        qesp_valor = unidade_data['Qesp_maior10'].values[0]
-                                    else:
-                                        qesp_valor = unidade_data['Qesp_menor10'].values[0]
-                                    col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor}")
-                        else:
-                            col1.warning("ID_Balanco não encontrado na planilha.")
+                    
+                        # Cálculo do valor em m³/s
+                        valor_m3_s = qesp_valor * area_drenagem
+                    
+                        # Retornar o valor calculado
+                        col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor:.2f} m³/(s·km²)")
+                        col1.success(f"O valor multiplicado pela área de drenagem é: {valor_m3_s:.2f} m³/s")
                     else:
-                        col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
-
-            except Exception as e:
-                col1.error(f"Erro ao carregar o shapefile: {e}")
-        else:
-            col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
-
-    except ValueError:
-        col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
+                        col1.warning("ID_Balanco não encontrado na planilha.")
+                    
+                                except Exception as e:
+                                    col1.error(f"Erro ao carregar o shapefile: {e}")
+                            else:
+                                col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
+                    
+                        except ValueError:
+                            col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
