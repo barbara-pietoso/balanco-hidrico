@@ -1,3 +1,49 @@
+import streamlit as st
+import folium
+import geopandas as gpd
+from shapely.geometry import Point
+import requests
+import zipfile
+import os
+import tempfile
+import pandas as pd
+from streamlit.components.v1 import html
+
+# Configurações da página
+st.set_page_config(
+    page_title="Consulta de Unidades",
+    page_icon=":world_map:",
+    layout="wide"
+)
+
+# Limites aproximados de latitude e longitude do Rio Grande do Sul
+LAT_MIN = -33.75  # Latitude mínima
+LAT_MAX = -27.5   # Latitude máxima
+LON_MIN = -54.5   # Longitude mínima
+LON_MAX = -49.0   # Longitude máxima
+
+# URL do arquivo .zip hospedado no GitHub
+zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape_upg.zip"
+
+# Função para validar se as coordenadas estão dentro dos limites do Rio Grande do Sul
+def valida_coordenadas(latitude, longitude):
+    return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
+
+# Layout do título no topo
+st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outórga</h1>", unsafe_allow_html=True)
+
+# Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
+col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
+
+# Entradas de latitude, longitude e área
+with col1:
+    latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
+    longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
+    area_input = st.text_input("Área (em km²)", placeholder="Insira a área em km²")
+    enviar = st.button("Exibir no Mapa")
+
+# Inicializar o mapa centralizado no Rio Grande do Sul
+mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
     try:
