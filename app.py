@@ -6,6 +6,7 @@ import requests
 import zipfile
 import os
 import tempfile
+import pandas as pd
 from streamlit.components.v1 import html
 
 # Configurações da página
@@ -22,33 +23,35 @@ LON_MIN = -54.5   # Longitude mínima
 LON_MAX = -49.0   # Longitude máxima
 
 # URL do arquivo .zip hospedado no GitHub
-zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape_upg.zip"
+zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape.zip"
 
 # Função para validar se as coordenadas estão dentro dos limites do Rio Grande do Sul
 def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
 # Layout do título no topo
-st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
 col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
 
-# Entradas de latitude e longitude
+# Entradas de latitude, longitude e área
 with col1:
     latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
     longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
+    area_input = st.text_input("Área (em km²)", placeholder="Insira a área em km²")
     enviar = st.button("Exibir no Mapa")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
 
-# Lógica para exibição do mapa
+# Lógica para exibição do mapa e consulta dos dados
 if enviar:
     try:
         # Tentar converter os valores inseridos para float
         latitude = float(latitude_input)
         longitude = float(longitude_input)
+        area = float(area_input)
 
         if valida_coordenadas(latitude, longitude):
             try:
@@ -90,11 +93,31 @@ if enviar:
                                 row['geometry'].__geo_interface__,
                                 style_function=lambda x: {'fillColor': 'blue', 'color': 'blue', 'weight': 2, 'fillOpacity': 0.5}
                             ).add_to(mapa)
-                            unidade_encontrada = row['UPG']  # Armazenar a UPG
+                            unidade_encontrada = row['ID_Balanco']  # Armazenar o ID_Balanco
                             break
 
                     if unidade_encontrada:
-                        col1.success(f"A coordenada inserida está localizada na UPG: {unidade_encontrada}")
+                        # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
+                        tabela_path = "tabela_id_balanco.xlsx"  # Caminho para a planilha
+                        tabela_df = pd.read_excel(tabela_path)
+
+                        # Procurar o valor correspondente à unidade
+                        unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
+
+                        if not unidade_data.empty:
+                            area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
+
+                            if pd.isna(area_qesp_rio):
+                                col1.warning("A área da unidade está em branco.")
+                            else:
+                                if area > 10:
+                                    qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                                else:
+                                    qesp_valor = unidade_data['Qesp_menor10'].values[0]
+
+                                col1.success(f"O valor da Qesp para a unidade é: {qesp_valor}")
+                        else:
+                            col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
                         col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
 
@@ -104,10 +127,9 @@ if enviar:
             col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
 
     except ValueError:
-        col1.error("Por favor, insira valores numéricos válidos para latitude e longitude.")
+        col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
 with col2:
     html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
-
