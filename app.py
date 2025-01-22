@@ -29,13 +29,10 @@ def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
 # Layout de colunas
-col1, col2, col3 = st.columns([1, 4, 1])
+col1, col2 = st.columns([1, 3])  # Ajuste das colunas: a primeira é para as entradas e a segunda para o mapa
 
 # Título
 col2.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
-
-# Layout de colunas ajustado
-col1, col2 = st.columns([1, 3])
 
 # Entradas de latitude e longitude no lado esquerdo
 with col1:
@@ -103,5 +100,6 @@ if enviar:
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
-html(mapa_html, height=600)
+with col2:
+    html(mapa_html, height=600)  # Renderiza o mapa na segunda coluna
 
