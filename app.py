@@ -28,13 +28,13 @@ zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_
 def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
-# Layout de colunas
-col1, col2 = st.columns([1, 3])  # Ajuste das colunas: a primeira é para as entradas e a segunda para o mapa
+# Layout do título no topo
+st.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
 
-# Título
-col2.markdown("<h1 style='text-align: center;'>Consulta de Unidades</h1>", unsafe_allow_html=True)
+# Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
+col1, col2 = st.columns([1, 3])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
 
-# Entradas de latitude e longitude no lado esquerdo
+# Entradas de latitude e longitude
 with col1:
     latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
     longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
@@ -102,4 +102,3 @@ if enviar:
 mapa_html = mapa._repr_html_()
 with col2:
     html(mapa_html, height=600)  # Renderiza o mapa na segunda coluna
-
