@@ -33,7 +33,7 @@ def valida_coordenadas(latitude, longitude):
 st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outórga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (3) para o mapa
+col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
 # Entradas de latitude, longitude e área
 with col1:
@@ -44,6 +44,7 @@ with col1:
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
+
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
     try:
@@ -95,18 +96,18 @@ if enviar:
                             unidade_encontrada = row['ID_Balanco']  # Armazenar o ID_Balanco
                             break
 
-                        if unidade_encontrada:
+                    if unidade_encontrada:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
                         tabela_path = "tabela_id_balanco.xlsx"  # Caminho para a planilha
                         tabela_df = pd.read_excel(tabela_path)
-                    
+
                         # Procurar o valor correspondente à unidade
                         unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
-                    
+
                         if not unidade_data.empty:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
                             area_drenagem = unidade_data['Área de drenagem (km²)'].values[0]  # Obter a área de drenagem da unidade
-                    
+
                             if pd.isna(area_qesp_rio):
                                 # Se a coluna "area_qesp_rio" estiver em branco
                                 if area > 10:
@@ -122,10 +123,10 @@ if enviar:
                                         qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                     else:
                                         qesp_valor = unidade_data['Qesp_menor10'].values[0]
-                    
+
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area_drenagem
-                    
+
                             # Retornar o valor calculado
                             col1.success(f"O valor da Qesp para a sua localidade é: {qesp_valor:.2f} m³/(s·km²)")
                             col1.success(f"O valor multiplicado pela área de drenagem é: {valor_m3_s:.2f} m³/s")
@@ -133,18 +134,16 @@ if enviar:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
                         col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
-    
-                            
-                                        except Exception as e:
-                                            col1.error(f"Erro ao carregar o shapefile: {e}")
-                                    else:
-                                        col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
-                            
-                                except ValueError:
-                                    col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
+            except Exception as e:
+                col1.error(f"Erro ao carregar o shapefile: {e}")
+        else:
+            col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
+    except ValueError:
+        col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
 with col2:
     html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
+
 
