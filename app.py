@@ -41,7 +41,7 @@ with col1:
     enviar = st.button("Exibir no Mapa")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
-mapa = folium.Map(location=[-30.0, -53.5], zoom_start=7)
+mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6)
 
 # Lógica para exibição do mapa
 if enviar:
