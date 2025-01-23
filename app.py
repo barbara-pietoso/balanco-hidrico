@@ -110,10 +110,9 @@ if enviar:
                             qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                                                         
-
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
 
@@ -148,8 +147,8 @@ if enviar:
                             col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} (km²)\n")
                             col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
                             col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s \n")
-                            col1.success(f"Percentual outorgável: {percentual_outorgavel * 100:.2f}%\n")
-                            col1.success(f"Vazão outorgável (m³/s): {vazo_out} m³/s \n")
+                            col1.success(f"Percentual outorgável: {percentual_outorgavel:.2f}%\n")
+                            col1.success(f"Vazão outorgável (m³/s): {vazao_out} m³/s \n")
                             
                             
                             
