@@ -106,18 +106,20 @@ if enviar:
     
                         if not unidade_data.empty:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
-                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0]  # Obter a área de drenagem da unidade
-    
-                            if pd.isna(area_qesp_rio):
-                                # Se a coluna "area_qesp_rio" estiver em branco
+                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
+                            qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
+
+                            #Verificar se a coluna Qesp_rio está vazia
+                            if pd.isna(qesp_rio):
+                                # "Qesp_rio" está vazia, verificar valor de "area"
                                 if area > 10:
                                     qesp_valor = unidade_data['Qesp_maior10'].values[0]
                                 else:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
                             else:
-                                # Se a coluna "area_qesp_rio" não estiver em branco
+                                 # "Qesp_rio" não está vazia, verificar relação entre "area" e "area_qesp_rio"
                                 if area > area_qesp_rio:
-                                    qesp_valor = unidade_data['Qesp_rio'].values[0]
+                                    qesp_valor = qesp_rio
                                 else:
                                     if area > 10:
                                         qesp_valor = unidade_data['Qesp_maior10'].values[0]
