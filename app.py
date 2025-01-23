@@ -12,7 +12,7 @@ from streamlit.components.v1 import html
 # Configurações da página
 st.set_page_config(
     page_title="Consulta de Unidades",
-    page_icon=":world_map:",
+    page_icon=":droplet:",
     layout="wide"
 )
 
