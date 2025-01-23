@@ -108,29 +108,44 @@ if enviar:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
                             area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
                             qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
+                            id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
+
+                            # Inicializar variável para rastrear qual valor foi usado
+                            origem_qesp_valor = ""
 
                             #Verificar se a coluna Qesp_rio está vazia
                             if pd.isna(qesp_rio):
                                 # "Qesp_rio" está vazia, verificar valor de "area"
                                 if area > 10:
                                     qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                                    origem_qesp_valor = "Qesp_maior10"
                                 else:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                                    origem_qesp_valor = "Qesp_menor10"
                             else:
                                  # "Qesp_rio" não está vazia, verificar relação entre "area" e "area_qesp_rio"
                                 if area > area_qesp_rio:
                                     qesp_valor = qesp_rio
+                                    origem_qesp_valor = "Qesp_rio"
                                 else:
                                     if area > 10:
                                         qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                                        origem_qesp_valor = "Qesp_maior10"
                                     else:
                                         qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                                        origem_qesp_valor = "Qesp_menor10"
     
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area_drenagem
     
                             # Retornar o valor calculado
-                            col1.success(f"A Vazão de referência para sua localidade é: {valor_m3_s:.10f} m³/s")
+                            col1.success(
+                                f"A Vazão de referência para sua localidade é: {valor_m3_s:.10f} m³/s"
+                                f"Origem do Qesp_valor: {origem_qesp_valor}\n"
+                                f"Qesp_valor: {qesp_valor:.5f} (km²)\n"
+                                f"Área de drenagem: {area_drenagem:.2f} (km²)\n"
+                                f"Vazão de referência para sua localidade: {valor_m3_s:.10f} m³/s"
+                            )
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
