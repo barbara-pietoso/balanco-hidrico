@@ -147,7 +147,7 @@ if enviar:
                             # Retornar o valor calculado
                             col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
                             col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
-                            col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} m³/s \n")
+                            col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} m³/s ({qesp_valor: * 1000} L/s) \n")
                             col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
                             col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s \n")
                             col1.success(f"Percentual outorgável: {percentual_outorgavel * 100}%\n")
