@@ -139,7 +139,7 @@ if enviar:
                             valor_m3_s = qesp_valor * area_drenagem
     
                             # Retornar o valor calculado
-                            col1.success(f"A Vazão de referência para sua localidade é: {valor_m3_s:.10f} m³/s")
+                            col1.success(f"ID_Balanco utilizada: {id_balanco_utilizado}\n")
                             col1.success(f"A Vazão de referência para sua localidade é: {valor_m3_s:.10f} m³/s")
                             col1.success(f"Origem do Qesp_valor: {origem_qesp_valor}\n")
                             col1.success(f"Qesp_valor: {qesp_valor:.5f} (km²)\n")
