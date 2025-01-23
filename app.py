@@ -110,7 +110,7 @@ if enviar:
                             qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] # Convertendo para decimal
+                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                                                         
                             # Inicializar variável para rastrear qual valor foi usado
