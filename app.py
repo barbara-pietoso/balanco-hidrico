@@ -140,10 +140,10 @@ if enviar:
     
                             # Retornar o valor calculado
                             col1.success(
-                                f"A Vazão de referência para sua localidade é: {valor_m3_s:.10f} m³/s"
-                                f"Origem do Qesp_valor: {origem_qesp_valor}\n"
-                                f"Qesp_valor: {qesp_valor:.5f} (km²)\n"
-                                f"Área de drenagem: {area_drenagem:.2f} (km²)\n"
+                                f"A Vazão de referência para sua localidade é: {valor_m3_s:.10f} m³/s",
+                                f"Origem do Qesp_valor: {origem_qesp_valor}\n",
+                                f"Qesp_valor: {qesp_valor:.5f} (km²)\n",
+                                f"Área de drenagem: {area_drenagem:.2f} (km²)\n",
                                 f"Vazão de referência para sua localidade: {valor_m3_s:.10f} m³/s"
                             )
                         else:
