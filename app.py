@@ -112,6 +112,8 @@ if enviar:
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
                             percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
+                            cod_bacia = unidade_data['COD'].values[0]
+                            nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
                                                         
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
@@ -143,6 +145,7 @@ if enviar:
                             vazao_out = valor_m3_s * percentual_outorgavel 
     
                             # Retornar o valor calculado
+                            col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
                             col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
                             col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} m³/s \n")
                             col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
