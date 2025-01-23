@@ -98,7 +98,7 @@ if enviar:
 
                     if unidade_encontrada:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
-                        tabela_path = "tabela_id_balanco.xlsx"  # Caminho para a planilha
+                        tabela_path = "tabela_id_balanco (1).xlsx"  # Caminho para a planilha
                         tabela_df = pd.read_excel(tabela_path)
     
                         # Procurar o valor correspondente à unidade
@@ -144,10 +144,10 @@ if enviar:
     
                             # Retornar o valor calculado
                             col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
-                            col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} (km²)\n")
+                            col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} m³/s \n")
                             col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
                             col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s \n")
-                            col1.success(f"Percentual outorgável: {percentual_outorgavel:.2f}%\n")
+                            col1.success(f"Percentual outorgável: {percentual_outorgavel * 100:.2f}%\n")
                             col1.success(f"Vazão outorgável (m³/s): {vazao_out} m³/s \n")
                             
                             
