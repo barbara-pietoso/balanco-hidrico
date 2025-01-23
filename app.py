@@ -144,7 +144,7 @@ if enviar:
                             vazao_out = valor_m3_s * percentual_outorgavel 
     
                             # Retornar o valor calculado
-                            col1.success(f"Unidade de Planejamento e Gestão: {unidade_planejamento}\n")
+                            col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
                             col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} (km²)\n")
                             col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
                             col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s \n")
