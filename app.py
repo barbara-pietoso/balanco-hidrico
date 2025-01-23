@@ -136,7 +136,7 @@ if enviar:
                                         origem_qesp_valor = "Qesp_menor10"
     
                             # Cálculo do valor em m³/s
-                            valor_m3_s = qesp_valor * area_drenagem
+                            valor_m3_s = qesp_valor * area
     
                             # Retornar o valor calculado
                             col1.success(f"ID_Balanco utilizada: {id_balanco_utilizado}\n")
