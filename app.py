@@ -109,6 +109,7 @@ if enviar:
                             area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
                             qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
+                            
 
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
@@ -137,11 +138,17 @@ if enviar:
     
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
+                            vazao_out = valor_m3_s * Percentual outorgável
     
                             # Retornar o valor calculado
-                            col1.success(f"UPG: {id_balanco_utilizado}\n")
-                            col1.success(f"A Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s")
-                            #col1.success(f"Qesp_valor: {qesp_valor:.5f} (km²)\n")
+                            col1.success(f"Unidade de Planejamento e Gestão: {'Unidade de Planejamento e Gestão'}\n")
+                            col1.success(f"Vazão específica do local (m³/s): {qesp_valor:.5f} (km²)\n")
+                            col1.success(f"Padrão da Vazão de Referência: {'Padrão da Vazão de Referência'}\n")
+                            col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s \n")
+                            col1.success(f"Percentual outorgável: {'Percentual outorgável'}\n")
+                            col1.success(f"Vazão outorgável (m³/s): {'vazo_out'} m³/s \n")
+                            
+                            
                             
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
