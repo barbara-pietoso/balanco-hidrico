@@ -141,7 +141,7 @@ if enviar:
     
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
-                            vazao_out = valor_m3_s * Percentual outorgável
+                            vazao_out = valor_m3_s * percentual_outorgavel 
     
                             # Retornar o valor calculado
                             col1.success(f"Unidade de Planejamento e Gestão: {unidade_planejamento}\n")
