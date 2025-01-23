@@ -11,7 +11,7 @@ from streamlit.components.v1 import html
 
 # Configurações da página
 st.set_page_config(
-    page_title="Consulta de Unidades",
+    page_title="Consulta de disponibilidade hídrica",
     page_icon=":droplet:",
     layout="wide"
 )
@@ -30,7 +30,7 @@ def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
 # Layout do título no topo
-st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outórga</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
 col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
