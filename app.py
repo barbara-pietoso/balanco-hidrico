@@ -40,7 +40,7 @@ with col1:
     latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
     longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
     area_input = st.text_input("Área (em km²)", placeholder="Insira a área em km²")
-    enviar = st.button("Exibir no Mapa")
+    enviar = st.button("Cosultar")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
