@@ -16,6 +16,13 @@ st.set_page_config(
     layout="wide"
 )
 
+col1, col2, col3 = st.columns([1,4,1])
+
+col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(1).png?raw=true', width=150)
+col2.title('Disponibilidade Hídrica para Outorga')
+col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.jpg?raw=true', width=250)
+
+
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -33.75  # Latitude mínima
 LAT_MAX = -27.5   # Latitude máxima
@@ -30,13 +37,13 @@ def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
 # Layout do título no topo
-st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
+#st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col1, col2 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
+col4, col5 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
 # Entradas de latitude, longitude e área
-with col1:
+with col4:
     latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
     longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
     area_input = st.text_input("Área (em km²)", placeholder="Insira a área em km²")
@@ -168,5 +175,5 @@ if enviar:
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
-with col2:
+with col5:
     html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
