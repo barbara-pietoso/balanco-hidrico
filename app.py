@@ -76,9 +76,7 @@ if enviar:
                     gdf = gpd.read_file(shp_file_path)
 
                     # Certificar-se de que o shapefile está em WGS84
-                    if gdf.crs is None:
-                        gdf.set_crs("EPSG:4326", inplace=True)
-                    elif gdf.crs.to_string() != "EPSG:4326":
+                    if gdf.crs.to_string() != "EPSG:4326":
                         gdf = gdf.to_crs("EPSG:4326")
 
                     # Adicionar todas as unidades ao mapa em uma única cor
@@ -99,7 +97,7 @@ if enviar:
                         if row['geometry'].contains(ponto):
                             # Destacar a unidade
                             folium.GeoJson(
-                                row['geometry'].__geo_interface__,
+                                row['geometry']._geo_interface_,
                                 style_function=lambda x: {'fillColor': 'blue', 'color': 'blue', 'weight': 2, 'fillOpacity': 0.5}
                             ).add_to(mapa)
                             unidade_encontrada = row['ID_Balanco']  # Armazenar o ID_Balanco
@@ -114,52 +112,76 @@ if enviar:
                         unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
     
                         if not unidade_data.empty:
-                            area_qesp_rio = unidade_data['area_qesp_rio'].values[0] if 'area_qesp_rio' in unidade_data.columns else None
-                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] if 'Área de drenagem (km²)' in unidade_data.columns else None
-                            qesp_rio = unidade_data['Qesp_rio'].values[0] if 'Qesp_rio' in unidade_data.columns else None
-                            id_balanco_utilizado = unidade_data['ID_Balanco'].values[0] if 'ID_Balanco' in unidade_data.columns else None
-                            upg = unidade_data['Unidade de Planejamento e Gestão'].values[0] if 'Unidade de Planejamento e Gestão' in unidade_data.columns else None
-                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100 if 'Percentual outorgável' in unidade_data.columns else None
-                            padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0] if 'Padrão da Vazão de Referência' in unidade_data.columns else None
-                            cod_bacia = unidade_data['COD'].values[0] if 'COD' in unidade_data.columns else None
-                            nome_bacia = unidade_data['Bacia Hidrográfica'].values[0] if 'Bacia Hidrográfica' in unidade_data.columns else None
+                            area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
+                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
+                            qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
+                            id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
+                            upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
+                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
+                            cod_bacia = unidade_data['COD'].values[0]
+                            nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
                                                         
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
 
-                            # Verificar se a coluna Qesp_rio está vazia
+                            #Verificar se a coluna Qesp_rio está vazia
                             if pd.isna(qesp_rio):
-                                qesp_valor = unidade_data['Qesp_maior10'].values[0] if area > 10 else unidade_data['Qesp_menor10'].values[0]
-                                origem_qesp_valor = "Qesp_maior10" if area > 10 else "Qesp_menor10"
+                                # "Qesp_rio" está vazia, verificar valor de "area"
+                                if area > 10:
+                                    qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                                    origem_qesp_valor = "Qesp_maior10"
+                                else:
+                                    qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                                    origem_qesp_valor = "Qesp_menor10"
                             else:
+                                 # "Qesp_rio" não está vazia, verificar relação entre "area" e "area_qesp_rio"
                                 if area > area_qesp_rio:
                                     qesp_valor = qesp_rio
                                     origem_qesp_valor = "Qesp_rio"
                                 else:
-                                    qesp_valor = unidade_data['Qesp_maior10'].values[0] if area > 10 else unidade_data['Qesp_menor10'].values[0]
-                                    origem_qesp_valor = "Qesp_maior10" if area > 10 else "Qesp_menor10"
+                                    if area > 10:
+                                        qesp_valor = unidade_data['Qesp_maior10'].values[0]
+                                        origem_qesp_valor = "Qesp_maior10"
+                                    else:
+                                        qesp_valor = unidade_data['Qesp_menor10'].values[0]
+                                        origem_qesp_valor = "Qesp_menor10"
     
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
-                           # Retornar o valor calculado
-                            col1.metric(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
-                            col1.metric(f"Unidade de Planejamento e Gestão: {upg}\n")
-                            col1.metric(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
-                            col1.metric(f"Padrão da Vazão de Referência: {padrao_ref}\n")
-                            col1.metric(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
-                            col1.metric(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
-                            col1.metric(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
-
-            except requests.exceptions.RequestException as e:
-                st.error(f"Erro ao baixar o shapefile: {e}")
+                            with st.container():
+                                col1.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
+                                col1.metric("Unidade de Planejamento e Gestão:", upg)
+                                col1.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
+                                col1.metric("Padrão da Vazão de Referência:", padrao_ref)
+                                col1.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s", f"({valor_m3_s * 1000:.2f} L/s)")
+                                col1.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
+                                col1.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s", f"({vazao_out * 1000:.2f} L/s)")
+        
+                            
+                            # Retornar o valor calculado
+                            #col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
+                            #col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
+                            #col1.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
+                            #col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
+                            #col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
+                            #col1.success(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
+                            #col1.success(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
+                            
+                            
+                            
+                        else:
+                            col1.warning("ID_Balanco não encontrado na planilha.")
+                    else:
+                        col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
             except Exception as e:
-                st.error(f"Ocorreu um erro inesperado: {e}")
-    except ValueError as e:
-        st.error(f"Erro ao converter valores para float: {e}")
-    except Exception as e:
-        st.error(f"Ocorreu um erro inesperado: {e}")
+                col1.error(f"Erro ao carregar o shapefile: {e}")
+        else:
+            col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
+    except ValueError:
+        col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
        
                             
                             # Retornar o valor calculado
