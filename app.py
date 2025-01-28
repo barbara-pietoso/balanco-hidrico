@@ -20,7 +20,7 @@ col1, col2, col3 = st.columns([1,2,1])
 
 col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(2).png?raw=true', width=300)
 col2.title('        Disponibilidade Hídrica para Outorga')
-col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.png?raw=true', width=200)
+col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.png?raw=true', width=150)
 
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
@@ -97,7 +97,7 @@ if enviar:
                         if row['geometry'].contains(ponto):
                             # Destacar a unidade
                             folium.GeoJson(
-                                row['geometry']._geo_interface_,
+                                row['geometry'].__geo_interface__,
                                 style_function=lambda x: {'fillColor': 'blue', 'color': 'blue', 'weight': 2, 'fillOpacity': 0.5}
                             ).add_to(mapa)
                             unidade_encontrada = row['ID_Balanco']  # Armazenar o ID_Balanco
@@ -107,10 +107,10 @@ if enviar:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
                         tabela_path = "tabela_id_balanco (1).xlsx"  # Caminho para a planilha
                         tabela_df = pd.read_excel(tabela_path)
-    
+
                         # Procurar o valor correspondente à unidade
                         unidade_data = tabela_df[tabela_df['ID_Balanco'] == unidade_encontrada]
-    
+
                         if not unidade_data.empty:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
                             area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
@@ -121,7 +121,7 @@ if enviar:
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                             cod_bacia = unidade_data['COD'].values[0]
                             nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
-                                                        
+
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
 
@@ -146,11 +146,12 @@ if enviar:
                                     else:
                                         qesp_valor = unidade_data['Qesp_menor10'].values[0]
                                         origem_qesp_valor = "Qesp_menor10"
-    
+
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
+                            # Retornar o valor calculado
                             col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
                             col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
                             col1.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
@@ -158,19 +159,9 @@ if enviar:
                             col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
                             col1.success(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
                             col1.success(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
-        
-                            
-                            # Retornar o valor calculado
-                            #col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
-                            #col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
-                            #col1.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
-                            #col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
-                            #col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
-                            #col1.success(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
-                            #col1.success(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
-                            
-                            
-                            
+
+
+
                         else:
                             col1.warning("ID_Balanco não encontrado na planilha.")
                     else:
@@ -181,29 +172,6 @@ if enviar:
             col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
     except ValueError:
         col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
-       
-                            
-                            # Retornar o valor calculado
-                            #col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
-                            #col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
-                            #col1.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
-                            #col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
-                            #col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
-                            #col1.success(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
-                            #col1.success(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
-                            
-                            
-                            
-                        #else:
-                            #col1.warning("ID_Balanco não encontrado na planilha.")
-                    #else:
-                        #col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
-            #except Exception as e:
-                #col1.error(f"Erro ao carregar o shapefile: {e}")
-        #else:
-            #col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
-    #except ValueError:
-        #col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
