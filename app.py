@@ -53,7 +53,7 @@ with col6:
 enviar = st.button("Consultar disponibilidade hídrica")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
-with col6:
+with col10:
     mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
 
 col8, col9, col10 = st.columns([1,1,1])
@@ -195,4 +195,4 @@ if enviar:
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
 with col10:
-    html(mapa_html, width=700, height=600)  # Renderiza o mapa na segunda coluna
+    html(mapa_html, width=600, height=700)  # Renderiza o mapa na segunda coluna
