@@ -151,7 +151,7 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
-                            with st.container():
+                            with col1.container():
                                 st.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
                                 st.success(f"Unidade de Planejamento e Gestão: {upg}\n")
                                 st.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
