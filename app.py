@@ -49,7 +49,7 @@ with col5:
     longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
 with col6:
     area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
-with col7
+with col7:
     enviar = st.button("Consultar disponibilidade hídrica")
 
 col8, col9, col10 = st.columns([2,2,1])
