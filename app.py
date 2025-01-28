@@ -151,26 +151,26 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
-                            # Retornar o valor calculado
-                            col4.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
-                            col4.success(f"Unidade de Planejamento e Gestão: {upg}\n")
-                            col4.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
-                            col4.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
-                            col4.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
-                            col4.success(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
-                            col4.success(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
+                           #with st.container():
+                            col4.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
+                            col4.metric("Unidade de Planejamento e Gestão:", upg)
+                            col4.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
+                            col4.metric("Padrão da Vazão de Referência:", padrao_ref)
+                            col4.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s", f"({valor_m3_s * 1000:.2f} L/s)")
+                            col4.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
+                            col4.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s", f"({vazao_out * 1000:.2f} L/s)")
 
 
                         else:
-                            col1.warning("ID_Balanco não encontrado na planilha.")
+                            col4.warning("ID_Balanco não encontrado na planilha.")
                     else:
-                        col1.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
+                        col4.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
             except Exception as e:
-                col1.error(f"Erro ao carregar o shapefile: {e}")
+                col4.error(f"Erro ao carregar o shapefile: {e}")
         else:
-            col1.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
+            col4.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
     except ValueError:
-        col1.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
+        col4.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
