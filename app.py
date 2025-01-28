@@ -153,19 +153,26 @@ if enviar:
 
                            #with st.container():
                             with col4:
-                                st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
+                                with sr.container(border=True):
+                                    st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
                             with col4:
-                                st.metric("Unidade de Planejamento e Gestão:", upg)
+                                with st.container(border=True):
+                                    st.metric("Unidade de Planejamento e Gestão:", upg)
                             with col4:
-                                st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
+                                with st.container(border=True):
+                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
                             with col4:
-                                st.metric("Padrão da Vazão de Referência:", padrao_ref)
+                                st.container(border=True):
+                                    st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col4:
-                                st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s", f"({valor_m3_s * 1000:.2f} L/s)")
+                                st.container(border=True):
+                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s", f"({valor_m3_s * 1000:.2f} L/s)")
                             with col4:
-                                st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
+                                st.container(border=True):
+                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
                             with col4:
-                                st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s", f"({vazao_out * 1000:.2f} L/s)")
+                                st.container(border=True):
+                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s", f"({vazao_out * 1000:.2f} L/s)")
 
 
                         else:
