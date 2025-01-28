@@ -53,6 +53,7 @@ with col6:
 enviar = st.button("Consultar disponibilidade hídrica")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
+with col6:
 mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
 
 col8, col9, col10 = st.columns([1,1,1])
