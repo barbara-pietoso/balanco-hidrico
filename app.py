@@ -151,14 +151,14 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
-                            with col1.container():
-                                st.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
-                                st.success(f"Unidade de Planejamento e Gestão: {upg}\n")
-                                st.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
-                                st.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
-                                st.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
-                                st.success(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
-                                st.success(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
+                            with st.container():
+                                col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
+                                col1.success(f"Unidade de Planejamento e Gestão: {upg}\n")
+                                col1.success(f"Vazão específica do local: {qesp_valor:.5f} m³/s/km² ({qesp_valor * 1000:.2f} L/s/km²) \n")
+                                col1.success(f"Padrão da Vazão de Referência: {padrao_ref}\n")
+                                col1.success(f"Vazão de referência para sua localidade é: {valor_m3_s:.6f} m³/s ({valor_m3_s * 1000:.2f} L/s) \n")
+                                col1.success(f"Percentual outorgável: {percentual_outorgavel * 100:.0f}%\n")
+                                col1.success(f"Vazão outorgável: {vazao_out} m³/s ({vazao_out * 1000:.2f} L/s) \n")
     
                             
                             # Retornar o valor calculado
