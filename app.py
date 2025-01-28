@@ -44,10 +44,10 @@ col4, col5 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a se
 
 # Entradas de latitude, longitude e área
 with col4:
-    latitude_input = st.text_input("Latitude", placeholder="Insira uma latitude")
-    longitude_input = st.text_input("Longitude", placeholder="Insira uma longitude")
-    area_input = st.text_input("Área (em km²)", placeholder="Insira a área em km²")
-    enviar = st.button("Cosultar")
+    latitude_input = st.text_input("Latitude", placeholder="Digite a latitude. Ex: -32.000")
+    longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
+    area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
+    enviar = st.button("Cosultar disponibilidade hídrica")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
