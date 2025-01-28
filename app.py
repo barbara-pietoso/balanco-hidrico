@@ -153,7 +153,7 @@ if enviar:
 
                            #with st.container():
                             with col4:
-                                with sr.container(border=True):
+                                with st.container(border=True):
                                     st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
                             with col4:
                                 with st.container(border=True):
