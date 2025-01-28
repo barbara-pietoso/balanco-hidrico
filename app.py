@@ -50,7 +50,10 @@ with col4:
     enviar = st.button("Cosultar")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
-mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
+if enviar and 'latitude' in locals() and longitude in locals():
+    mapa = folium.Map(location=[latitude, longitude], zoom_start=10) #centraliza no ponto inserido
+else: 
+    mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
