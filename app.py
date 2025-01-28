@@ -143,7 +143,7 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
-                            with st.container():
+                           # Retornar o valor calculado
                                 col1.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
                                 col1.metric("Unidade de Planejamento e Gestão:", upg)
                                 col1.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
