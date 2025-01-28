@@ -40,7 +40,7 @@ def valida_coordenadas(latitude, longitude):
 #st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col4, col5, col6, col7 = st.columns([1,1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
+col4, col5, col6 = st.columns([1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
 # Entradas de latitude, longitude e área
 with col4:
@@ -49,13 +49,13 @@ with col5:
     longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
 with col6:
     area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
-with col7:
-    enviar = st.button("Consultar disponibilidade hídrica")
+    
+enviar = st.button("Consultar disponibilidade hídrica")
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
 
-col8, col9, col10 = st.columns([2,2,1])
+col8, col9, col10 = st.columns([1,1,1])
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
