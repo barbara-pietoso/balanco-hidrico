@@ -16,11 +16,11 @@ st.set_page_config(
     layout="wide"
 )
 
-col1, col2, col3 = st.columns([1,4,1])
+col1, col2, col3 = st.columns([1,5,1])
 
-col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(1).png?raw=true', width=150)
+col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(1).png?raw=true', width=300)
 col2.title('Disponibilidade Hídrica para Outorga')
-col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.jpg?raw=true', width=250)
+col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.jpg?raw=true', width=200)
 
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
