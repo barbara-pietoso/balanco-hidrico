@@ -152,14 +152,14 @@ if enviar:
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
                             with st.container():
-                            col1.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
-                            col1.metric("Unidade de Planejamento e Gestão:", upg)
-                            col1.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
-                            col1.metric("Padrão da Vazão de Referência:", padrao_ref)
-                            col1.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s", f"({valor_m3_s * 1000:.2f} L/s)")
-                            col1.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
-                            col1.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s", f"({vazao_out * 1000:.2f} L/s)")
-    
+                                col1.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
+                                col1.metric("Unidade de Planejamento e Gestão:", upg)
+                                col1.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
+                                col1.metric("Padrão da Vazão de Referência:", padrao_ref)
+                                col1.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s", f"({valor_m3_s * 1000:.2f} L/s)")
+                                col1.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
+                                col1.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s", f"({vazao_out * 1000:.2f} L/s)")
+        
                             
                             # Retornar o valor calculado
                             #col1.success(f"Bacia Hidrográfica: {cod_bacia} - {nome_bacia}\n")
