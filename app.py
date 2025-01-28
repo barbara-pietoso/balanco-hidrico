@@ -16,7 +16,7 @@ st.set_page_config(
     layout="wide"
 )
 
-col1, col2, col3 = st.columns([1,1,1])
+col1, col2, col3 = st.columns([1,3,1])
 
 col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(2).png?raw=true', width=300)
 col2.title('Disponibilidade Hídrica no Rio Grande do Sul')
@@ -40,7 +40,7 @@ def valida_coordenadas(latitude, longitude):
 #st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col4, col5, col6 = st.columns([1,3,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
+col4, col5, col6 = st.columns([1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
 # Entradas de latitude, longitude e área
 with col4:
