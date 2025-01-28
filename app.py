@@ -56,7 +56,7 @@ col8, col9, col10 = st.columns([1,1,1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
-    mapa = folium.Map(location=[-30.0, -52.5], zoom_start=4)
+    mapa = folium.Map(location=[-30.0, -52.5], zoom_start=5)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
