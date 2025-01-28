@@ -40,14 +40,19 @@ def valida_coordenadas(latitude, longitude):
 #st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col4, col5 = st.columns([1, 2])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
+col4, col5, col6, col7 = st.columns([1,1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
 # Entradas de latitude, longitude e área
 with col4:
     latitude_input = st.text_input("Latitude", placeholder="Digite a latitude. Ex: -32.000")
+with col5:
     longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
+with col6:
     area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
-    enviar = st.button("Cosultar disponibilidade hídrica")
+with col7
+    enviar = st.button("Consultar disponibilidade hídrica")
+
+col8, col9, col10 = st.columns([2,2,1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa = folium.Map(location=[-30.0, -52.5], zoom_start=6.5)
@@ -98,7 +103,7 @@ if enviar:
                             # Destacar a unidade
                             folium.GeoJson(
                                 row['geometry'].__geo_interface__,
-                                style_function=lambda x: {'fillColor': 'blue', 'color': 'blue', 'weight': 2, 'fillOpacity': 0.5}
+                                style_function=lambda x: {'fillColor': 'babyblue', 'color': 'babyblue', 'weight': 2, 'fillOpacity': 0.2}
                             ).add_to(mapa)
                             unidade_encontrada = row['ID_Balanco']  # Armazenar o ID_Balanco
                             break
@@ -152,25 +157,25 @@ if enviar:
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
                            #with st.container():
-                            with col4:
+                            with col8:
                                 with st.container(border=True):
                                     st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
-                            with col4:
+                            with col8:
                                 with st.container(border=True):
                                     st.metric("Unidade de Planejamento e Gestão:", upg)
-                            with col4:
+                            with col8:
                                 with st.container(border=True):
                                     st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²", f"{qesp_valor * 1000:.2f} L/s/km²")
-                            with col4:
+                            with col8:
                                 with st.container(border=True):
                                     st.metric("Padrão da Vazão de Referência:", padrao_ref)
-                            with col4:
+                            with col9:
                                 with st.container(border=True):
                                     st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s", f"({valor_m3_s * 1000:.2f} L/s)")
-                            with col4:
+                            with col9:
                                 with st.container(border=True):
                                     st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
-                            with col4:
+                            with col9:
                                 with st.container(border=True):
                                     st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s", f"({vazao_out * 1000:.2f} L/s)")
 
@@ -188,5 +193,5 @@ if enviar:
 
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
-with col5:
+with col10:
     html(mapa_html, width=1000, height=600)  # Renderiza o mapa na segunda coluna
