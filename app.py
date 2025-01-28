@@ -195,4 +195,4 @@ if enviar:
 # Renderizar o mapa no Streamlit
 mapa_html = mapa._repr_html_()
 with col10:
-    html(mapa_html, width=500, height=600)  # Renderiza o mapa na segunda coluna
+    html(mapa_html, width=700, height=600)  # Renderiza o mapa na segunda coluna
