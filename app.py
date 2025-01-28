@@ -19,7 +19,7 @@ st.set_page_config(
 col1, col2, col3 = st.columns([1,2,1])
 
 col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(2).png?raw=true', width=300)
-col2.title('        Disponibilidade Hídrica para Outorga')
+col2.title('Disponibilidade hídrica no Rio Grande do Sul')
 col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.png?raw=true', width=150)
 
 
