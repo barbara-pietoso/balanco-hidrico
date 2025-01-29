@@ -50,11 +50,11 @@ enviar = st.button("Consultar disponibilidade hídrica")
 col8, col9, col10 = st.columns([1, 1, 1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
-mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5.5)
+mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5)
 
 # Exibir o mapa inicial
 with col10:
-    folium_static(mapa_inicial, width=600, height=700)
+    folium_static(mapa_inicial)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -66,8 +66,8 @@ if enviar:
 
         if valida_coordenadas(latitude, longitude):
             try:
-                # Criar um mapa centralizado nas coordenadas inseridas
-                mapa = folium.Map(location=[latitude, longitude], zoom_start=13)
+                # Usar o mapa já existente
+                mapa = mapa_inicial
 
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
@@ -124,7 +124,7 @@ if enviar:
                             qesp_rio = unidade_data['Qesp_rio'].values[0]  # valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            percentual_outorgável = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                             cod_bacia = unidade_data['COD'].values[0]
                             nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
@@ -156,10 +156,8 @@ if enviar:
 
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
-                            vazao_out = valor_m3_s * percentual_outorgavel
+                            vazao_out = valor_m3_s * percentual_outorgável
 
-
-                           #with st.container():
                             with col8:
                                 with st.container(border=True):
                                     st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
@@ -171,24 +169,26 @@ if enviar:
                                     st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col8:
                                 with st.container(border=True):
-                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
+                                    st.metric("Percentual outorgável:", f"{percentual_outorgável * 100:,0f}%")
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
+                                    st.metric("Vazão específica do local:", f"{qesp_valor:,5f} m³/s/km²")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({qesp_valor * 1000:,2f} L/s/km²)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
+                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:,6f} m³/s")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:,2f} L/s)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
+                                    st.metric("Vazão outorgável:", f"{vazao_out:,6f} m³/s")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:,2f} L/s)</p>', unsafe_allow_html=True)
                         
                         else:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
+                
+                # Exibir o mapa atualizado
                 folium_static(mapa, width=600, height=700)
 
             except Exception as e:
