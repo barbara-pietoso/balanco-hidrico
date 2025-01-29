@@ -52,7 +52,7 @@ col8, col9, col10 = st.columns([1, 1, 1])
 # Inicializar o mapa inicial
 mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5)
 
-# Exibir o mapa inicial
+# Exibir o mapa inicial na col10
 with col10:
     folium_static(mapa_inicial)
 
@@ -194,7 +194,7 @@ if enviar:
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
                     
-                    # Substituir o mapa inicial pelo mapa atualizado
+                    # Substituir o mapa inicial pelo mapa atualizado apenas uma vez no final
                     with col10:
                         folium_static(mapa, width=600, height=600)
 
