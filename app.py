@@ -7,7 +7,6 @@ import zipfile
 import os
 import tempfile
 import pandas as pd
-from streamlit.components.v1 import html
 from streamlit_folium import folium_static
 
 # Configurações da página
@@ -17,12 +16,11 @@ st.set_page_config(
     layout="wide"
 )
 
-col1, col2, col3 = st.columns([1,3,1])
+col1, col2, col3 = st.columns([1, 3, 1])
 
 col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(2).png?raw=true', width=300)
 col2.title('Disponibilidade Hídrica no Rio Grande do Sul')
 col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.png?raw=true', width=150)
-
 
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -33.75  # Latitude mínima
@@ -37,23 +35,19 @@ zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_
 def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
-# Layout do título no topo
-#st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
+# Layout das entradas de latitude, longitude e área
+col4, col5, col6 = st.columns([1, 1, 1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
-# Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col4, col5, col6 = st.columns([1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
-
-# Entradas de latitude, longitude e área
 with col4:
     latitude_input = st.text_input("Latitude", placeholder="Digite a latitude. Ex: -32.000")
 with col5:
     longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
 with col6:
     area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
-    
+
 enviar = st.button("Consultar disponibilidade hídrica")
 
-col8, col9, col10 = st.columns([1,1,1])
+col8, col9, col10 = st.columns([1, 1, 1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
@@ -123,11 +117,11 @@ if enviar:
 
                         if not unidade_data.empty:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
-                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
-                            qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
+                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0]  # Área de drenagem da unidade
+                            qesp_rio = unidade_data['Qesp_rio'].values[0]  # valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            percentual_outorgável = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                             cod_bacia = unidade_data['COD'].values[0]
                             nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
@@ -135,7 +129,7 @@ if enviar:
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
 
-                            #Verificar se a coluna Qesp_rio está vazia
+                            # Verificar se a coluna Qesp_rio está vazia
                             if pd.isna(qesp_rio):
                                 # "Qesp_rio" está vazia, verificar valor de "area"
                                 if area > 10:
@@ -145,7 +139,7 @@ if enviar:
                                     qesp_valor = unidade_data['Qesp_menor10'].values[0]
                                     origem_qesp_valor = "Qesp_menor10"
                             else:
-                                 # "Qesp_rio" não está vazia, verificar relação entre "area" e "area_qesp_rio"
+                                # "Qesp_rio" não está vazia, verificar relação entre "area" e "area_qesp_rio"
                                 if area > area_qesp_rio:
                                     qesp_valor = qesp_rio
                                     origem_qesp_valor = "Qesp_rio"
@@ -159,45 +153,38 @@ if enviar:
 
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
-                            vazao_out = valor_m3_s * percentual_outorgavel 
+                            vazao_out = valor_m3_s * percentual_outorgável
 
-                           #with st.container():
+                            # Exibir as métricas
                             with col8:
-                                with st.container(border=True):
-                                    st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
+                                st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
                             with col8:
-                                with st.container(border=True):
-                                    st.metric("Unidade de Planejamento e Gestão:", upg)
+                                st.metric("Unidade de Planejamento e Gestão:", upg)
                             with col8:
-                                with st.container(border=True):
-                                    st.metric("Padrão da Vazão de Referência:", padrao_ref)
+                                st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col8:
-                                with st.container(border=True):
-                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
+                                st.metric("Percentual outorgável:", f"{percentual_outorgável * 100:.0f}%")
                             with col9:
-                                with st.container(border=True):
-                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
+                                st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
                             with col9:
-                                with st.container(border=True):
-                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
+                                st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
                             with col9:
-                                with st.container(border=True):
-                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
+                                st.metric("Vazão outorgável para sua localidade:", f"{vazao_out:.6f} m³/s")
+
+                            # Exibir as unidades de gestão de recursos hídricos
+                            st.write(f"**Unidade de Planejamento e Gestão (UPG):** {upg} (ID: {id_balanco_utilizado})")
+
                         else:
-                            col4.warning("ID_Balanco não encontrado na planilha.")
+                            st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
-                        col4.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
-            except Exception as e:
-                col4.error(f"Erro ao carregar o shapefile: {e}")
-        else:
-            col4.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
-    except ValueError:
-        col4.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
+                        st.error("Coordenadas não pertencem a uma unidade de planejamento.")
+                folium_static(mapa)
 
-# Renderizar o mapa no Streamlit
-mapa_html = mapa._repr_html_()
-with col10:
-    html(mapa_html, width=600, height=700)  # Renderiza o mapa na segunda coluna
+            except Exception as e:
+                st.error(f"Erro ao processar o arquivo shapefile: {e}")
+
+        else:
+            st.error("As coordenadas informadas não pertencem ao Rio Grande do Sul.")
+    except ValueError:
+        st.error("Por favor, insira valores válidos para latitude, longitude e área.")
+
