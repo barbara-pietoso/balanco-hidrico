@@ -189,7 +189,7 @@ if enviar:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
-                folium_static(mapa)
+                folium_static(mapa, width=600, height=700)
 
             except Exception as e:
                 st.error(f"Erro ao processar o arquivo shapefile: {e}")
