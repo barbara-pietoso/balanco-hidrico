@@ -52,7 +52,7 @@ col8, col9, col10 = st.columns([1, 1, 1])
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5.5)
 
-# Exibir o mapa inicial
+# Exibir o mapa inicial com tamanho ajustado
 with col10:
     folium_static(mapa_inicial, width=600, height=600)
 
@@ -66,8 +66,8 @@ if enviar:
 
         if valida_coordenadas(latitude, longitude):
             try:
-                # Usar o mapa já existente
-                mapa = mapa_inicial
+                # Criar um mapa centralizado nas coordenadas inseridas
+                mapa = folium.Map(location=[latitude, longitude], zoom_start=13)
 
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
@@ -124,7 +124,7 @@ if enviar:
                             qesp_rio = unidade_data['Qesp_rio'].values[0]  # valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgável = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                             cod_bacia = unidade_data['COD'].values[0]
                             nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
@@ -156,7 +156,7 @@ if enviar:
 
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
-                            vazao_out = valor_m3_s * percentual_outorgável
+                            vazao_out = valor_m3_s * percentual_outorgavel
 
                             with col8:
                                 with st.container(border=True):
@@ -169,7 +169,7 @@ if enviar:
                                     st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col8:
                                 with st.container(border=True):
-                                    st.metric("Percentual outorgável:", f"{percentual_outorgável * 100:.0f}%")
+                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
                             with col9:
                                 with st.container(border=True):
                                     st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
@@ -187,8 +187,6 @@ if enviar:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
-                
-                # Exibir o mapa atualizado
                 folium_static(mapa, width=600, height=600)
 
             except Exception as e:
