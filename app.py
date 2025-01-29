@@ -172,28 +172,16 @@ if enviar:
                                     st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
                             with col9:
                                 with st.container(border=True):
-                                    st.markdown(f"""
-                                    <div style="text-align: center;">
-                                        <span style="font-size: 1.2em; font-weight: bold;">{qesp_valor:.5f} m³/s/km²</span><br>
-                                        <span style="font-size: 0.8em; color: gray;">{qesp_valor * 1000:.2f} L/s/km²</span>
-                                    </div>
-                                    """, unsafe_allow_html=True)
+                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
+                                    st.markdown(f'<p style="text-align:center; font-size:0.9em; color:gray;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
-                                    st.markdown(f"""
-                                    <div style="text-align: center;">
-                                        <span style="font-size: 1.2em; font-weight: bold;">{valor_m3_s:.6f} m³/s</span><br>
-                                        <span style="font-size: 0.8em; color: gray;">({valor_m3_s * 1000:.2f} L/s)</span>
-                                    </div>
-                                    """, unsafe_allow_html=True)
+                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
+                                    st.markdown(f'<p style="text-align:center; font-size:0.9em; color:gray;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
-                                    st.markdown(f"""
-                                    <div style="text-align: center;">
-                                        <span style="font-size: 1.2em; font-weight: bold;">{vazao_out:.6f} m³/s</span><br>
-                                        <span style="font-size: 0.8em; color: gray;">({vazao_out * 1000:.2f} L/s)</span>
-                                    </div>
-                                    """, unsafe_allow_html=True)
+                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
+                                    st.markdown(f'<p style="text-align:center; font-size:0.9em; color:gray;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
                         else:
                             col4.warning("ID_Balanco não encontrado na planilha.")
                     else:
