@@ -71,6 +71,7 @@ if enviar:
 
         if valida_coordenadas(latitude, longitude):
             try:
+                upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
                 # Criar um mapa centralizado nas coordenadas inseridas
                 mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
 
