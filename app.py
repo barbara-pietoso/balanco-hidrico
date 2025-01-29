@@ -172,13 +172,13 @@ if enviar:
                                     st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²" - {qesp_valor * 1000:.2f} L/s/km²")
+                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²  {qesp_valor * 1000:.2f} L/s/km²")
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s" - ({valor_m3_s * 1000:.2f} L/s)")
+                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s  ({valor_m3_s * 1000:.2f} L/s)")
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s" - ({vazao_out * 1000:.2f} L/s)")
+                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s  ({vazao_out * 1000:.2f} L/s)")
 
 
                         else:
