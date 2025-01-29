@@ -57,8 +57,9 @@ col8, col9, col10 = st.columns([1,1,1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
-    with st.container(border=True):
-        mapa = folium.Map(location=[-30.5, -52.5], title = "Mapa do RS", zoom_start=5.5)
+    # Definindo o título diretamente na interface
+    st.markdown("<h3 style='text-align: center;'>Mapa do Rio Grande do Sul</h3>", unsafe_allow_html=True)
+    mapa = folium.Map(location=[-30.5, -52.5], zoom_start=5.5)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -71,7 +72,18 @@ if enviar:
         if valida_coordenadas(latitude, longitude):
             try:
                 # Criar um mapa centralizado nas coordenadas inseridas
-                mapa = folium.Map(location=[latitude, longitude], title="UPG Selecionada", zoom_start=12)
+                mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
+
+                # Adicionar um título fixo sobre o mapa
+                titulo_html = """
+                    <div style="font-size: 24px; color: #333; font-weight: bold; text-align: center;">
+                        UPG Selecionada
+                    </div>
+                """
+                iframe = folium.IFrame(html=titulo_html, width=500, height=100)
+                folium.Marker(
+                    location=[latitude, longitude], popup=folium.Popup(iframe, max_width=250)
+                ).add_to(mapa)
 
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
