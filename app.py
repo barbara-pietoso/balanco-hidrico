@@ -57,7 +57,7 @@ col8, col9, col10 = st.columns([1,1,1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
-    mapa = folium.Map(location=[-30.0, -52.5], zoom_start=5)
+    mapa = folium.Map(location=[-30.0, -52.5], zoom_start=5.5)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -70,7 +70,7 @@ if enviar:
         if valida_coordenadas(latitude, longitude):
             try:
                 # Criar um mapa centralizado nas coordenadas inseridas
-                mapa = folium.Map(location=[latitude, longitude], zoom_start=13)
+                mapa = folium.Map(location=[latitude, longitude], zoom_start=10)
 
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
@@ -92,7 +92,7 @@ if enviar:
                     # Adicionar todas as unidades ao mapa em uma única cor
                     folium.GeoJson(
                         gdf,
-                        style_function=lambda x: {'fillColor': '#ffdfab', 'color': '#ffaa67', 'weight': 1, 'fillOpacity': 0.3}
+                        style_function=lambda x: {'fillColor': '#ffdfab', 'color': '#ffaa67', 'weight': 1, 'fillOpacity': 0.5}
                     ).add_to(mapa)
 
                     # Criar um ponto para as coordenadas inseridas
@@ -108,7 +108,7 @@ if enviar:
                             # Destacar a unidade
                             folium.GeoJson(
                                 row['geometry'].__geo_interface__,
-                                style_function=lambda x: {'fillColor': '#9fb9c2', 'color': '#9fb9c2', 'weight': 2, 'fillOpacity': 0.2}
+                                style_function=lambda x: {'fillColor': '#9fb9c2', 'color': '#9fb9c2', 'weight': 2, 'fillOpacity': 0.3}
                             ).add_to(mapa)
                             unidade_encontrada = row['ID_Balanco']
                             break
