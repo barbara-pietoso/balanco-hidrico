@@ -57,7 +57,7 @@ col8, col9, col10 = st.columns([1,1,1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
-    st.container(border=True):
+    with st.container(border=True):
     mapa = folium.Map(location=[-30.5, -52.5], title = 'Mapa do RS', zoom_start=5.5)
 
 # Lógica para exibição do mapa e consulta dos dados
