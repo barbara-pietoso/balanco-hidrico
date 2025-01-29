@@ -58,7 +58,7 @@ col8, col9, col10 = st.columns([1,1,1])
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
     # Definindo o título diretamente na interface
-    st.markdown("<h3 style='text-align: center;'>Mapa do Rio Grande do Sul</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: left;'>Coordenada inserida</h3>", unsafe_allow_html=True)
     mapa = folium.Map(location=[-30.5, -52.5], zoom_start=5.5)
 
 # Lógica para exibição do mapa e consulta dos dados
@@ -112,7 +112,8 @@ if enviar:
                     ponto = Point(longitude, latitude)
 
                     # Adicionar o ponto ao mapa
-                    folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
+                    popup_html = f"<strong>UPG:</strong> {upg}"
+                    folium.Marker([latitude, longitude], popup=folium.Popup(popup_html, max_width=250)).add_to(mapa)
 
                     # Destacar a unidade que contém o ponto e exibir a UPG
                     unidade_encontrada = None
