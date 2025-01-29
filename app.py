@@ -8,6 +8,7 @@ import os
 import tempfile
 import pandas as pd
 from streamlit.components.v1 import html
+from streamlit_folium import folium_static
 
 # Configurações da página
 st.set_page_config(
