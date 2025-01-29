@@ -68,6 +68,9 @@ if enviar:
 
         if valida_coordenadas(latitude, longitude):
             try:
+                # Criar um mapa centralizado nas coordenadas inseridas
+                mapa = folium.Map(location=[latitude, longitude], zoom_start=13)
+
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
                 with tempfile.TemporaryDirectory() as temp_dir:
@@ -106,8 +109,12 @@ if enviar:
                                 row['geometry'].__geo_interface__,
                                 style_function=lambda x: {'fillColor': 'babyblue', 'color': 'babyblue', 'weight': 2, 'fillOpacity': 0.2}
                             ).add_to(mapa)
-                            unidade_encontrada = row['ID_Balanco']  # Armazenar o ID_Balanco
+                            unidade_encontrada = row['ID_Balanco']
                             break
+
+                    # Exibir o mapa atualizado
+                    with col10:
+                        folium_static(mapa)
 
                     if unidade_encontrada:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
