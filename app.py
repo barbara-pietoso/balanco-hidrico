@@ -8,6 +8,7 @@ import os
 import tempfile
 import pandas as pd
 from streamlit_folium import folium_static
+import locale
 
 # Configurações da página
 st.set_page_config(
@@ -158,6 +159,9 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel
 
+                            # Configurar a localidade para Português do Brasil
+                            locale.setlocale(locale.LC_NUMERIC, 'pt_BR.UTF-8')
+
                             with col8:
                                 with st.container(border=True):
                                     st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
@@ -169,20 +173,24 @@ if enviar:
                                     st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col8:
                                 with st.container(border=True):
-                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
+                                    st.metric("Percentual outorgável:", f"{percentual_outorgável * 100:.0f}%")
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
+                                    # Formatar com vírgula como separador decimal
+                                    qesp_valor_formatado = locale.format_string("%.5f", qesp_valor, grouping=True)
+                                    st.metric("Vazão específica do local:", f"{qesp_valor_formatado} m³/s/km²")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({locale.format_string("%.2f", qesp_valor * 1000, grouping=True)} L/s/km²)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
+                                    valor_m3_s_formatado = locale.format_string("%.6f", valor_m3_s, grouping=True)
+                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s_formatado} m³/s")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({locale.format_string("%.2f", valor_m3_s * 1000, grouping=True)} L/s)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
-                        
+                                    vazao_out_formatado = locale.format_string("%.6f", vazao_out, grouping=True)
+                                    st.metric("Vazão outorgável:", f"{vazao_out_formatado} m³/s")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({locale.format_string("%.2f", vazao_out * 1000, grouping=True)} L/s)</p>', unsafe_allow_html=True)
+                                    
                         else:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
