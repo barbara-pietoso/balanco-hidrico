@@ -12,4 +12,4 @@ streamlit-echarts
 requests
 pyogrio
 pydeck
-locale
+
