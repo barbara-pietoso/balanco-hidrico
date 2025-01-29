@@ -173,15 +173,15 @@ if enviar:
                             with col9:
                                 with st.container(border=True):
                                     st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
-                                    st.markdown(f'<p style="text-align:center; font-size:0.9em; color:gray;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
                                     st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:center; font-size:0.9em; color:gray;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
                                     st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:center; font-size:0.9em; color:gray;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
                         else:
                             col4.warning("ID_Balanco não encontrado na planilha.")
                     else:
