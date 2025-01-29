@@ -54,7 +54,7 @@ mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5)
 
 # Exibir o mapa inicial
 with col10:
-    folium_static(mapa_inicial)
+    folium_static(mapa_inicial, width=600, height=600)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -189,7 +189,7 @@ if enviar:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
                 
                 # Exibir o mapa atualizado
-                folium_static(mapa, width=600, height=700)
+                folium_static(mapa, width=600, height=600)
 
             except Exception as e:
                 st.error(f"Erro ao processar o arquivo shapefile: {e}")
