@@ -49,11 +49,12 @@ enviar = st.button("Consultar disponibilidade hídrica")
 
 col8, col9, col10 = st.columns([1, 1, 1])
 
-# Inicializar o mapa centralizado no Rio Grande do Sul
+# Inicializar o mapa inicial
 mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5)
 
-# Exibir o mapa inicial apenas uma vez
-folium_static(mapa_inicial, width=600, height=600)
+# Exibir o mapa inicial
+with col10:
+    folium_static(mapa_inicial)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -192,7 +193,10 @@ if enviar:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
-                folium_static(mapa, width=600, height=600)
+                    
+                    # Substituir o mapa inicial pelo mapa atualizado
+                    with col10:
+                        folium_static(mapa, width=600, height=600)
 
             except Exception as e:
                 st.error(f"Erro ao processar o arquivo shapefile: {e}")
@@ -201,3 +205,4 @@ if enviar:
             st.error("As coordenadas informadas não pertencem ao Rio Grande do Sul.")
     except ValueError:
         st.error("Por favor, insira valores válidos para latitude, longitude e área.")
+
