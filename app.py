@@ -206,7 +206,7 @@ if enviar:
         col4.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
 # Renderizar o mapa no Streamlit
-mapa_html = mapa._repr_html_()
-with col10:
-    html(mapa_html, width=600, height=700)  # Renderiza o mapa na segunda coluna
+#mapa_html = mapa._repr_html_()
+#with col10:
+#    html(mapa_html, width=600, height=700)  # Renderiza o mapa na segunda coluna
 
