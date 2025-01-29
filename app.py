@@ -159,8 +159,11 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel
 
-                            # Configurar a localidade para Português do Brasil
-                            locale.setlocale(locale.LC_NUMERIC, 'pt_BR.UTF-8')
+                            # Tentativa de configurar a localidade para Português do Brasil
+                            try:
+                                locale.setlocale(locale.LC_NUMERIC, 'pt_BR.UTF-8')
+                            except locale.Error:
+                                st.warning("Configuração de localidade 'pt_BR.UTF-8' não suportada, utilizando configuração padrão.")
 
                             with col8:
                                 with st.container(border=True):
@@ -190,7 +193,7 @@ if enviar:
                                     vazao_out_formatado = locale.format_string("%.6f", vazao_out, grouping=True)
                                     st.metric("Vazão outorgável:", f"{vazao_out_formatado} m³/s")
                                     st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({locale.format_string("%.2f", vazao_out * 1000, grouping=True)} L/s)</p>', unsafe_allow_html=True)
-                                    
+                                  
                         else:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
@@ -199,9 +202,11 @@ if enviar:
                 mapa_placeholder._html(mapa._repr_html_(), width=600, height=600)
 
             except Exception as e:
-                st.error(f"Erro ao processar o arquivo shapefile: {e}")
+                st.error(f"Erro ao processar os dados: {e}")
 
         else:
-            st.error("As coordenadas informadas não pertencem ao Rio Grande do Sul.")
+            st.error("As coordenadas estão fora dos limites do Rio Grande do Sul!")
+    
     except ValueError:
         st.error("Por favor, insira valores válidos para latitude, longitude e área.")
+
