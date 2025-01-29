@@ -41,13 +41,13 @@ col4, col5, col6 = st.columns([1, 1, 1])
 
 # Entradas de latitude, longitude e área
 with col4:
-    latitude_input = st.text_input("Latitude", placeholder="Digite a latitude. Ex: -32.000")
+    latitude_input = st.text_input("Latitude", placeholder="Digite a latitude. Ex: -32.000", key="latitude_input")
 with col5:
-    longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
+    longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000", key="longitude_input")
 with col6:
-    area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
+    area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²", key="area_input")
 
-enviar = st.button("Consultar disponibilidade hídrica")
+enviar = st.button("Consultar disponibilidade hídrica", key="consultar_button")
 
 # Colunas para o mapa e as métricas de resultado
 col8, col9, col10 = st.columns([1, 1, 1])
@@ -61,8 +61,8 @@ def on_map_click(event):
     latitude = event.latlng[0]
     longitude = event.latlng[1]
     # Atualizar as entradas com as coordenadas do clique
-    latitude_input = st.session_state.latitude = f"{latitude:.6f}"
-    longitude_input = st.session_state.longitude = f"{longitude:.6f}"
+    st.session_state.latitude = f"{latitude:.6f}"
+    st.session_state.longitude = f"{longitude:.6f}"
 
 # Garantir que as coordenadas inseridas manualmente sejam preservadas
 if "latitude" not in st.session_state:
@@ -72,9 +72,9 @@ if "longitude" not in st.session_state:
 
 # Exibir as coordenadas de entrada (ou clicadas)
 with col4:
-    latitude_input = st.text_input("Latitude", value=st.session_state.latitude, placeholder="Digite a latitude. Ex: -32.000")
+    latitude_input = st.text_input("Latitude", value=st.session_state.latitude, placeholder="Digite a latitude. Ex: -32.000", key="latitude_input_2")
 with col5:
-    longitude_input = st.text_input("Longitude", value=st.session_state.longitude, placeholder="Digite a longitude. Ex: -50.000")
+    longitude_input = st.text_input("Longitude", value=st.session_state.longitude, placeholder="Digite a longitude. Ex: -50.000", key="longitude_input_2")
 
 # Adicionar funcionalidade de clique no mapa
 mapa.add_child(folium.ClickForMarker(popup="Coordenadas", on_click=on_map_click))
@@ -182,40 +182,20 @@ if enviar:
                                         origem_qesp_valor = "Qesp_menor10"
 
                             # Cálculo do valor em m³/s
-                            valor_m3_s = qesp_valor * area
-                            vazao_out = valor_m3_s * percentual_outorgavel 
+                            valor_m3_s = qesp_valor * percentual_outorgável
 
-                            # Exibição das métricas
+                            # Exibir resultados
                             with col8:
-                                with st.container(border=True):
-                                    st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
-                            with col8:
-                                with st.container(border=True):
-                                    st.metric("Unidade de Planejamento e Gestão:", upg)
-                            with col8:
-                                with st.container(border=True):
-                                    st.metric("Padrão da Vazão de Referência:", padrao_ref)
-                            with col8:
-                                with st.container(border=True):
-                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
-                            with col9:
-                                with st.container(border=True):
-                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
-                            with col9:
-                                with st.container(border=True):
-                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
-                            with col9:
-                                with st.container(border=True):
-                                    st.metric("Vazão outorgável para sua localidade é:", f"{vazao_out:.6f} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
-                               
+                                st.write(f"Área selecionada: {area:.2f} km²")
+                                st.write(f"Unidade de Planejamento e Gestão (UPG): {upg}")
+                                st.write(f"Valor Qesp (m³/s): {qesp_valor:.2f}")
+                                st.write(f"Valor percentual outorgável: {percentual_outorgável*100:.2f}%")
+                                st.write(f"Valor em m³/s: {valor_m3_s:.2f}")
+                                st.write(f"ID da Bacia Hidrográfica: {cod_bacia} - {nome_bacia}")
+
             except Exception as e:
-                st.error(f"Ocorreu um erro ao processar o arquivo de shapefile: {str(e)}")
-
+                st.error(f"Erro ao processar dados do shapefile: {e}")
         else:
-            st.warning("As coordenadas inseridas não são válidas para o Rio Grande do Sul.")
+            st.error("As coordenadas inseridas estão fora do Rio Grande do Sul.")
     except ValueError:
-        st.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
-
+        st.error("Por favor, insira valores válidos para latitude, longitude e área.")
