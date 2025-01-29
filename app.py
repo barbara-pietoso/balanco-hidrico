@@ -137,6 +137,10 @@ if enviar:
                             unidade_encontrada = row['ID_Balanco']
                             break
 
+                    # Exibir o mapa atualizado
+                    with col10:
+                        folium_static(mapa)
+
                     if unidade_encontrada:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
                         tabela_path = "tabela_id_balanco (1).xlsx"  # Caminho para a planilha
@@ -151,7 +155,7 @@ if enviar:
                             qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            percentual_outorgável = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                             cod_bacia = unidade_data['COD'].values[0]
                             nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
