@@ -17,18 +17,17 @@ st.set_page_config(
     layout="wide"
 )
 
-col1, col2, col3 = st.columns([1,3,1])
-
+# Colunas para a imagem e título no topo
+col1, col2, col3 = st.columns([1, 3, 1])
 col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(2).png?raw=true', width=300)
 col2.title('Disponibilidade Hídrica no Rio Grande do Sul')
 col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.png?raw=true', width=150)
 
-
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
-LAT_MIN = -33.75  # Latitude mínima
-LAT_MAX = -27.5   # Latitude máxima
-LON_MIN = -54.5   # Longitude mínima
-LON_MAX = -49.0   # Longitude máxima
+LAT_MIN = -33.75
+LAT_MAX = -27.5
+LON_MIN = -54.5
+LON_MAX = -49.0
 
 # URL do arquivo .zip hospedado no GitHub
 zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_shape_upg.zip"
@@ -37,11 +36,8 @@ zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_
 def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
-# Layout do título no topo
-#st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
-
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col4, col5, col6 = st.columns([1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
+col4, col5, col6 = st.columns([1, 1, 1])
 
 # Entradas de latitude, longitude e área
 with col4:
@@ -53,6 +49,7 @@ with col6:
 
 enviar = st.button("Consultar disponibilidade hídrica")
 
+# Colunas para o mapa e as métricas de resultado
 col8, col9, col10 = st.columns([1, 1, 1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
@@ -63,7 +60,6 @@ with col10:
 def on_map_click(event):
     latitude = event.latlng[0]
     longitude = event.latlng[1]
-
     # Atualizar as entradas com as coordenadas do clique
     latitude_input = st.session_state.latitude = f"{latitude:.6f}"
     longitude_input = st.session_state.longitude = f"{longitude:.6f}"
@@ -151,11 +147,11 @@ if enviar:
 
                         if not unidade_data.empty:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
-                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
-                            qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
-                            id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
+                            area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] 
+                            qesp_rio = unidade_data['Qesp_rio'].values[0] 
+                            id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgável = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            percentual_outorgável = unidade_data['Percentual outorgável'].values[0] / 100  
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                             cod_bacia = unidade_data['COD'].values[0]
                             nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
@@ -163,7 +159,7 @@ if enviar:
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
 
-                            #Verificar se a coluna Qesp_rio está vazia
+                            # Verificar se a coluna Qesp_rio está vazia
                             if pd.isna(qesp_rio):
                                 # "Qesp_rio" está vazia, verificar valor de "area"
                                 if area > 10:
@@ -189,7 +185,7 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgavel 
 
-                           #with st.container():
+                            # Exibição das métricas
                             with col8:
                                 with st.container(border=True):
                                     st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
@@ -212,20 +208,14 @@ if enviar:
                                     st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
+                                    st.metric("Vazão outorgável para sua localidade é:", f"{vazao_out:.6f} m³/s")
                                     st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
-                        else:
-                            col4.warning("ID_Balanco não encontrado na planilha.")
-                    else:
-                        col4.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
+                               
             except Exception as e:
-                col4.error(f"Erro ao carregar o shapefile: {e}")
-        else:
-            col4.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
-    except ValueError:
-        col4.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
+                st.error(f"Ocorreu um erro ao processar o arquivo de shapefile: {str(e)}")
 
-# Renderizar o mapa no Streamlit
-mapa_html = mapa._repr_html_()
-with col10:
-    html(mapa_html, width=600, height=700)  # Renderiza o mapa na segunda coluna
+        else:
+            st.warning("As coordenadas inseridas não são válidas para o Rio Grande do Sul.")
+    except ValueError:
+        st.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
+
