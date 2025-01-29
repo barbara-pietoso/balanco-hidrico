@@ -52,9 +52,9 @@ col8, col9, col10 = st.columns([1, 1, 1])
 # Inicializar o mapa centralizado no Rio Grande do Sul
 mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5)
 
-# Exibir o mapa inicial
-with col10:
-    folium_static(mapa_inicial)
+# Exibir o mapa inicial em um espaço reservado
+mapa_placeholder = col10.empty()
+mapa_placeholder._html(mapa_inicial._repr_html_(), width=600, height=600)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -187,7 +187,8 @@ if enviar:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
-                folium_static(mapa, width=600, height=600)
+                # Atualizar o espaço reservado com o novo mapa
+                mapa_placeholder._html(mapa._repr_html_(), width=600, height=600)
 
             except Exception as e:
                 st.error(f"Erro ao processar o arquivo shapefile: {e}")
