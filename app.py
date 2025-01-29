@@ -50,8 +50,11 @@ enviar = st.button("Consultar disponibilidade hídrica")
 col8, col9, col10 = st.columns([1, 1, 1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
+mapa_inicial = folium.Map(location=[-30.0, -52.5], zoom_start=5)
+
+# Exibir o mapa inicial
 with col10:
-    mapa = folium.Map(location=[-30.0, -52.5], zoom_start=5)
+    folium_static(mapa_inicial)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -155,6 +158,7 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgável
 
+
                            #with st.container():
                             with col8:
                                 with st.container(border=True):
@@ -180,7 +184,9 @@ if enviar:
                                 with st.container(border=True):
                                     st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
                                     st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
-
+                        
+                        else:
+                            st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
                 folium_static(mapa)
