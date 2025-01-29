@@ -92,7 +92,7 @@ if enviar:
                     # Adicionar todas as unidades ao mapa em uma única cor
                     folium.GeoJson(
                         gdf,
-                        style_function=lambda x: {'fillColor': '#f0ce4e', 'color': '#f0ce4e', 'weight': 1, 'fillOpacity': 0.4}
+                        style_function=lambda x: {'fillColor': '#eab975', 'color': '#eab975', 'weight': 1, 'fillOpacity': 0.4}
                     ).add_to(mapa)
 
                     # Criar um ponto para as coordenadas inseridas
