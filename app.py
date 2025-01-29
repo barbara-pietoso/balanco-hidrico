@@ -50,14 +50,38 @@ with col5:
     longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
 with col6:
     area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
-    
+
 enviar = st.button("Consultar disponibilidade hídrica")
 
-col8, col9, col10 = st.columns([1,1,1])
+col8, col9, col10 = st.columns([1, 1, 1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
     mapa = folium.Map(location=[-30.0, -52.5], zoom_start=5)
+
+# Função para adicionar um marcador no mapa e atualizar as coordenadas
+def on_map_click(event):
+    latitude = event.latlng[0]
+    longitude = event.latlng[1]
+
+    # Atualizar as entradas com as coordenadas do clique
+    latitude_input = st.session_state.latitude = f"{latitude:.6f}"
+    longitude_input = st.session_state.longitude = f"{longitude:.6f}"
+
+# Garantir que as coordenadas inseridas manualmente sejam preservadas
+if "latitude" not in st.session_state:
+    st.session_state.latitude = latitude_input
+if "longitude" not in st.session_state:
+    st.session_state.longitude = longitude_input
+
+# Exibir as coordenadas de entrada (ou clicadas)
+with col4:
+    latitude_input = st.text_input("Latitude", value=st.session_state.latitude, placeholder="Digite a latitude. Ex: -32.000")
+with col5:
+    longitude_input = st.text_input("Longitude", value=st.session_state.longitude, placeholder="Digite a longitude. Ex: -50.000")
+
+# Adicionar funcionalidade de clique no mapa
+mapa.add_child(folium.ClickForMarker(popup="Coordenadas", on_click=on_map_click))
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
