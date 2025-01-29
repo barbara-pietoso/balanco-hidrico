@@ -113,10 +113,6 @@ if enviar:
                             unidade_encontrada = row['ID_Balanco']
                             break
 
-                    # Exibir o mapa atualizado
-                    with col10:
-                        folium_static(mapa)
-
                     if unidade_encontrada:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
                         tabela_path = "tabela_id_balanco (1).xlsx"  # Caminho para a planilha
