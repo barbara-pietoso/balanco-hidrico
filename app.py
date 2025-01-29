@@ -180,8 +180,7 @@ if enviar:
                                 with st.container(border=True):
                                     st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
                                     st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
-                         else:
-                            st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
+
                     else:
                         st.error("Coordenadas não pertencem a uma unidade de planejamento.")
                 folium_static(mapa)
