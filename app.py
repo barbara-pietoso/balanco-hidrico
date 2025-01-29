@@ -124,7 +124,7 @@ if enviar:
                             qesp_rio = unidade_data['Qesp_rio'].values[0]  # valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
-                            percentual_outorgável = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
+                            percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
                             padrao_ref = unidade_data['Padrão da Vazão de Referência'].values[0]
                             cod_bacia = unidade_data['COD'].values[0]
                             nome_bacia = unidade_data['Bacia Hidrográfica'].values[0]
@@ -156,7 +156,7 @@ if enviar:
 
                             # Cálculo do valor em m³/s
                             valor_m3_s = qesp_valor * area
-                            vazao_out = valor_m3_s * percentual_outorgável
+                            vazao_out = valor_m3_s * percentual_outorgavel
 
 
                            #with st.container():
