@@ -155,24 +155,30 @@ if enviar:
                             valor_m3_s = qesp_valor * area
                             vazao_out = valor_m3_s * percentual_outorgável
 
-                            # Exibir as métricas
                             with col8:
-                                st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
+                                with st.container(border=True):
+                                    st.metric("Bacia Hidrográfica:", f"{cod_bacia} - {nome_bacia}")
                             with col8:
-                                st.metric("Unidade de Planejamento e Gestão:", upg)
+                                with st.container(border=True):
+                                    st.metric("Unidade de Planejamento e Gestão:", upg)
                             with col8:
-                                st.metric("Padrão da Vazão de Referência:", padrao_ref)
+                                with st.container(border=True):
+                                    st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col8:
-                                st.metric("Percentual outorgável:", f"{percentual_outorgável * 100:.0f}%")
+                                with st.container(border=True):
+                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
                             with col9:
-                                st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
+                                with st.container(border=True):
+                                    st.metric("Vazão específica do local:", f"{qesp_valor:.5f} m³/s/km²")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({qesp_valor * 1000:.2f} L/s/km²)</p>', unsafe_allow_html=True)
                             with col9:
-                                st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
+                                with st.container(border=True):
+                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f} m³/s")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({valor_m3_s * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
                             with col9:
-                                st.metric("Vazão outorgável para sua localidade:", f"{vazao_out:.6f} m³/s")
-
-                            # Exibir as unidades de gestão de recursos hídricos
-                            st.write(f"**Unidade de Planejamento e Gestão (UPG):** {upg} (ID: {id_balanco_utilizado})")
+                                with st.container(border=True):
+                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f} m³/s")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({vazao_out * 1000:.2f} L/s)</p>', unsafe_allow_html=True)
 
                         else:
                             st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
