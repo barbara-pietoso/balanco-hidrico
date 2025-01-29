@@ -92,7 +92,7 @@ if enviar:
                     # Adicionar todas as unidades ao mapa em uma única cor
                     folium.GeoJson(
                         gdf,
-                        style_function=lambda x: {'fillColor': 'gray', 'color': 'black', 'weight': 1, 'fillOpacity': 0.3}
+                        style_function=lambda x: {'fillColor': '#ffdfab', 'color': '#ffaa67', 'weight': 1, 'fillOpacity': 0.3}
                     ).add_to(mapa)
 
                     # Criar um ponto para as coordenadas inseridas
@@ -108,14 +108,10 @@ if enviar:
                             # Destacar a unidade
                             folium.GeoJson(
                                 row['geometry'].__geo_interface__,
-                                style_function=lambda x: {'fillColor': 'babyblue', 'color': 'babyblue', 'weight': 2, 'fillOpacity': 0.2}
+                                style_function=lambda x: {'fillColor': '#9fb9c2', 'color': '#9fb9c2', 'weight': 2, 'fillOpacity': 0.2}
                             ).add_to(mapa)
                             unidade_encontrada = row['ID_Balanco']
                             break
-
-                    # Exibir o mapa atualizado
-                    #with col10:
-                    #   folium_static(mapa)
 
                     if unidade_encontrada:
                         # Carregar a planilha para fazer o cruzamento com a coluna ID_Balanco
