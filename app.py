@@ -17,7 +17,7 @@ st.set_page_config(
     layout="wide"
 )
 
-col1, col2, col3 = st.columns([1, 3, 1])
+col1, col2, col3 = st.columns([1,3,1])
 
 col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/Bras%C3%A3o---RS---Sema%20(2).png?raw=true', width=300)
 col2.title('Disponibilidade Hídrica no Rio Grande do Sul')
@@ -38,10 +38,10 @@ def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
 # Layout do título no topo
-# st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
+#st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
 
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
-col4, col5, col6 = st.columns([1, 1, 1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
+col4, col5, col6 = st.columns([1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
 # Entradas de latitude, longitude e área
 with col4:
@@ -50,16 +50,14 @@ with col5:
     longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
 with col6:
     area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
-
+    
 enviar = st.button("Consultar disponibilidade hídrica")
 
-col8, col9, col10 = st.columns([1, 1, 1])
+col8, col9, col10 = st.columns([1,1,1])
 
 # Inicializar o mapa centralizado no Rio Grande do Sul
 with col10:
-    # Definindo o título diretamente na interface
-    st.markdown("<h3 style='text-align: left;'>Coordenada inserida</h3>", unsafe_allow_html=True)
-    mapa = folium.Map(location=[-30.5, -52.5], zoom_start=5.5)
+    mapa = folium.Map(location=[-30.0, -52.5], zoom_start=5.5)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
@@ -71,6 +69,9 @@ if enviar:
 
         if valida_coordenadas(latitude, longitude):
             try:
+                # Criar um mapa centralizado nas coordenadas inseridas
+                mapa = folium.Map(location=[latitude, longitude], zoom_start=10)
+
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
                 with tempfile.TemporaryDirectory() as temp_dir:
@@ -88,32 +89,17 @@ if enviar:
                     if gdf.crs.to_string() != "EPSG:4326":
                         gdf = gdf.to_crs("EPSG:4326")
 
-                    # Criar um ponto para as coordenadas inseridas
-                    ponto = Point(longitude, latitude)
-
-                    # Criar um mapa centralizado nas coordenadas inseridas
-                    mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
-
-                    # Adicionar um título fixo sobre o mapa
-                    titulo_html = """
-                        <div style="font-size: 24px; color: #333; font-weight: bold; text-align: center;">
-                            UPG Selecionada
-                        </div>
-                    """
-                    iframe = folium.IFrame(html=titulo_html, width=500, height=100)
-                    folium.Marker(
-                        location=[latitude, longitude], popup=folium.Popup(iframe, max_width=250)
-                    ).add_to(mapa)
-
                     # Adicionar todas as unidades ao mapa em uma única cor
                     folium.GeoJson(
                         gdf,
-                        style_function=lambda x: {'fillColor': '##c3ccaf', 'color': '###c3ccaf', 'weight': 2, 'fillOpacity': 0.4}
+                        style_function=lambda x: {'fillColor': '#ffdfab', 'color': '#ffaa67', 'weight': 1, 'fillOpacity': 0.5}
                     ).add_to(mapa)
 
+                    # Criar um ponto para as coordenadas inseridas
+                    ponto = Point(longitude, latitude)
+
                     # Adicionar o ponto ao mapa
-                    popup_html = f"<strong>Coordenada inserida:</strong> Latitude: {latitude}, Longitude: {longitude}"
-                    folium.Marker([latitude, longitude], popup=folium.Popup(popup_html, max_width=250)).add_to(mapa)
+                    folium.Marker([latitude, longitude], popup="Coordenadas Inseridas").add_to(mapa)
 
                     # Destacar a unidade que contém o ponto e exibir a UPG
                     unidade_encontrada = None
@@ -122,7 +108,7 @@ if enviar:
                             # Destacar a unidade
                             folium.GeoJson(
                                 row['geometry'].__geo_interface__,
-                                style_function=lambda x: {'fillColor': '#9fb9c2', 'color': '#9fb9c2', 'weight': 2, 'fillOpacity': 0.2}
+                                style_function=lambda x: {'fillColor': '#9fb9c2', 'color': '#9fb9c2', 'weight': 2, 'fillOpacity': 0.3}
                             ).add_to(mapa)
                             unidade_encontrada = row['ID_Balanco']
                             break
@@ -138,7 +124,7 @@ if enviar:
                         if not unidade_data.empty:
                             area_qesp_rio = unidade_data['area_qesp_rio'].values[0]
                             area_drenagem = unidade_data['Área de drenagem (km²)'].values[0] # Área de drenagem da unidade
-                            qesp_rio = unidade_data['Qesp_rio'].values[0] # Valor da coluna Qesp_rio
+                            qesp_rio = unidade_data ['Qesp_rio'].values[0] #valor da coluna Qesp_rio
                             id_balanco_utilizado = unidade_data['ID_Balanco'].values[0]  # Nome da ID_Balanco
                             upg = unidade_data['Unidade de Planejamento e Gestão'].values[0]
                             percentual_outorgavel = unidade_data['Percentual outorgável'].values[0] / 100  # Convertendo para decimal
@@ -149,7 +135,7 @@ if enviar:
                             # Inicializar variável para rastrear qual valor foi usado
                             origem_qesp_valor = ""
 
-                            # Verificar se a coluna Qesp_rio está vazia
+                            #Verificar se a coluna Qesp_rio está vazia
                             if pd.isna(qesp_rio):
                                 # "Qesp_rio" está vazia, verificar valor de "area"
                                 if area > 10:
@@ -198,22 +184,25 @@ if enviar:
                                 with st.container(border=True):
                                     st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s:.6f}".replace('.', ',') + " m³/s")
                                     st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({(valor_m3_s * 1000):.2f}'.replace('.', ',') + ' L/s)</p>', unsafe_allow_html=True)
-                                    
+                            
+
                             with col9:
                                 with st.container(border=True):
-                                    st.metric("Vazão Outorgável: ", f"{vazao_out:.6f}".replace('.', ',') + " m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({(vazao_out * 1000):.2f}'.replace('.', ',') + ' L/s)</p>', unsafe_allow_html=True) 
-
-                            st.markdown(f"### Fonte: Qesp usado do cálculo do valor: {origem_qesp_valor}")
-
+                                    st.metric("Vazão outorgável:", f"{vazao_out:.6f}".replace('.', ',') + " m³/s")
+                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({(vazao_out * 1000):.2f}'.replace('.', ',') + ' L/s)</p>', unsafe_allow_html=True)
+                        else:
+                            col4.warning("ID_Balanco não encontrado na planilha.")
                     else:
-                        st.error("Nenhuma unidade encontrada nas coordenadas fornecidas.")
-
+                        col4.warning("Não foi possível encontrar uma unidade correspondente à coordenada inserida.")
             except Exception as e:
-                st.error(f"Ocorreu um erro ao processar a consulta: {str(e)}")
+                col4.error(f"Erro ao carregar o shapefile: {e}")
         else:
-            st.error("As coordenadas fornecidas estão fora dos limites do Rio Grande do Sul.")
+            col4.warning("As coordenadas estão fora dos limites do Rio Grande do Sul.")
     except ValueError:
-        st.error("Por favor, insira valores válidos para latitude, longitude e área.")
+        col4.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
+# Renderizar o mapa no Streamlit
+mapa_html = mapa._repr_html_()
+with col10:
+    html(mapa_html, width=600, height=700)  # Renderiza o mapa na segunda coluna
 
