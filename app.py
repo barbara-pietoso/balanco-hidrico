@@ -10,6 +10,10 @@ import pandas as pd
 from streamlit_folium import folium_static
 import locale
 
+# Função para formatar números no padrão brasileiro
+def formatar_para_ptbr(numero):
+    return f"{numero:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
 # Configurações da página
 st.set_page_config(
     page_title="Consulta de disponibilidade hídrica",
@@ -176,37 +180,33 @@ if enviar:
                                     st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col8:
                                 with st.container(border=True):
-                                    st.metric("Percentual outorgável:", f"{percentual_outorgável * 100:.0f}%")
+                                    st.metric("Percentual outorgável:", f"{percentual_outorgavel * 100:.0f}%")
                             with col9:
                                 with st.container(border=True):
                                     # Formatar com vírgula como separador decimal
-                                    qesp_valor_formatado = locale.format_string("%.5f", qesp_valor, grouping=True)
-                                    st.metric("Vazão específica do local:", f"{qesp_valor_formatado} m³/s/km²")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({locale.format_string("%.2f", qesp_valor * 1000, grouping=True)} L/s/km²)</p>', unsafe_allow_html=True)
+                                    qesp_valor_formatado = formatar_para_ptbr(qesp_valor)
+                                    st.metric("Vazão específica do local:", f"{qesp_valor_formatado} m³/s")
                             with col9:
                                 with st.container(border=True):
-                                    valor_m3_s_formatado = locale.format_string("%.6f", valor_m3_s, grouping=True)
-                                    st.metric("Vazão de referência para sua localidade é:", f"{valor_m3_s_formatado} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({locale.format_string("%.2f", valor_m3_s * 1000, grouping=True)} L/s)</p>', unsafe_allow_html=True)
+                                    st.metric("Valor de QESP utilizado:", origem_qesp_valor)
                             with col9:
                                 with st.container(border=True):
-                                    vazao_out_formatado = locale.format_string("%.6f", vazao_out, grouping=True)
-                                    st.metric("Vazão outorgável:", f"{vazao_out_formatado} m³/s")
-                                    st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({locale.format_string("%.2f", vazao_out * 1000, grouping=True)} L/s)</p>', unsafe_allow_html=True)
-                                  
-                        else:
-                            st.error(f"Não foi encontrada uma unidade para o ID_Balanco: {unidade_encontrada}")
-                    else:
-                        st.error("Coordenadas não pertencem a uma unidade de planejamento.")
-                # Atualizar o espaço reservado com o novo mapa
-                mapa_placeholder._html(mapa._repr_html_(), width=600, height=600)
+                                    # Formatar com vírgula como separador decimal
+                                    valor_m3_s_formatado = formatar_para_ptbr(valor_m3_s)
+                                    st.metric("Valor em m³/s:", f"{valor_m3_s_formatado} m³/s")
+                            with col9:
+                                with st.container(border=True):
+                                    # Formatar com vírgula como separador decimal
+                                    vazao_out_formatado = formatar_para_ptbr(vazao_out)
+                                    st.metric("Vazão Outorgável (m³/s):", f"{vazao_out_formatado} m³/s")
 
+                            # Atualizar mapa
+                            folium_static(mapa)
+                        else:
+                            st.write("Unidade não encontrada no banco de dados.")
             except Exception as e:
                 st.error(f"Erro ao processar os dados: {e}")
-
         else:
-            st.error("As coordenadas estão fora dos limites do Rio Grande do Sul!")
-    
+            st.error("As coordenadas inseridas estão fora dos limites do Rio Grande do Sul.")
     except ValueError:
-        st.error("Por favor, insira valores válidos para latitude, longitude e área.")
-
+        st.error("Por favor, insira valores válidos para as coordenadas e a área.")
