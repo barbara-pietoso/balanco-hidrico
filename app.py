@@ -176,7 +176,7 @@ if enviar:
                                     st.metric("Padrão da Vazão de Referência:", padrao_ref)
                             with col8:
                                 with st.container(border=True):
-                                    st.metric("Percentual outorgável:", f"{(percentual_outorgável * 100):.0f}".replace('.', ',') + "%")
+                                    st.metric("Percentual outorgável:", f"{(percentual_outorgavel * 100):.0f}".replace('.', ',') + "%")
                             
                             with col9:
                                 with st.container(border=True):
