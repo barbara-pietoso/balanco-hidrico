@@ -70,7 +70,7 @@ if enviar:
         if valida_coordenadas(latitude, longitude):
             try:
                 # Criar um mapa centralizado nas coordenadas inseridas
-                mapa = folium.Map(location=[latitude, longitude], zoom_start=10)
+                mapa = folium.Map(location=[latitude, longitude], zoom_start=12)
 
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
@@ -92,7 +92,7 @@ if enviar:
                     # Adicionar todas as unidades ao mapa em uma única cor
                     folium.GeoJson(
                         gdf,
-                        style_function=lambda x: {'fillColor': '#ffdfab', 'color': '##ffc978', 'weight': 1, 'fillOpacity': 0.5}
+                        style_function=lambda x: {'fillColor': '#ffdfab', 'color': '##ffc978', 'weight': 1, 'fillOpacity': 0.4}
                     ).add_to(mapa)
 
                     # Criar um ponto para as coordenadas inseridas
