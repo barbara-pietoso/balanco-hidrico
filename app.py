@@ -59,6 +59,9 @@ col8, col9, col10 = st.columns([1,1,1])
 with col10:
     mapa = folium.Map(location=[-30.0, -52.5], zoom_start=5.5)
 
+# Adicionar a funcionalidade de mostrar as coordenadas ao mover o mouse
+folium.LatLngPopup().add_to(mapa)
+
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
     try:
@@ -71,6 +74,9 @@ if enviar:
             try:
                 # Criar um mapa centralizado nas coordenadas inseridas
                 mapa = folium.Map(location=[latitude, longitude], zoom_start=10)
+
+                # Adicionar a funcionalidade de mostrar as coordenadas ao mover o mouse
+                folium.LatLngPopup().add_to(mapa)
 
                 # Baixar e extrair o shapefile do GitHub
                 zip_file = requests.get(zip_url).content
