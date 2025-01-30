@@ -203,6 +203,12 @@ if enviar:
 
 # Renderizar o mapa no Streamlit 
 mapa_html = mapa._repr_html_()
+
+# Adicionando um marcador com popup contendo 'upg'
+folium.Marker(
+    location=[longitude, latitude],  # Substitua pelas coordenadas reais
+    popup=str(upg)  # Certifique-se de que 'upg' seja convertido para string
+).add_to(mapa)
 with col10:
     folium_static(mapa_html, width=600, height=700, popup={upg})  # Renderiza o mapa na segunda coluna
 
