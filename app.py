@@ -215,4 +215,4 @@ if enviar:
 
 # Renderizar o mapa no Streamlit 
 with col10:
-    folium_static(mapa, width=600, height=550)  # Renderiza o mapa na segunda coluna
+    folium_static(mapa, width=600, height=500)  # Renderiza o mapa na segunda coluna
