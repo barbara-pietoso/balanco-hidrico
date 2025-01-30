@@ -190,6 +190,12 @@ if enviar:
                                 with st.container(border=True):
                                     st.metric("Vazão outorgável:", f"{vazao_out:.6f}".replace('.', ',') + " m³/s")
                                     st.markdown(f'<p style="text-align:left; font-size:1.5em; color:black;">({(vazao_out * 1000):.2f}'.replace('.', ',') + ' L/s)</p>', unsafe_allow_html=True)
+
+                            # Adicionar um marcador com popup contendo 'upg'
+                            folium.Marker(
+                                location=[latitude, longitude],
+                                popup=f"UPG: {upg}"
+                            ).add_to(mapa)
                         else:
                             col4.warning("ID_Balanco não encontrado na planilha.")
                     else:
@@ -202,13 +208,6 @@ if enviar:
         col4.error("Por favor, insira valores numéricos válidos para latitude, longitude e área.")
 
 # Renderizar o mapa no Streamlit 
-mapa_html = mapa._repr_html_()
-
-# Adicionando um marcador com popup contendo 'upg'
-folium.Marker(
-    location=[longitude, latitude],  # Substitua pelas coordenadas reais
-    popup=str(upg)  # Certifique-se de que 'upg' seja convertido para string
-).add_to(mapa)
 with col10:
-    folium_static(mapa_html, width=600, height=700, popup={upg})  # Renderiza o mapa na segunda coluna
+    folium_static(mapa, width=600, height=700)  # Renderiza o mapa na segunda coluna
 
