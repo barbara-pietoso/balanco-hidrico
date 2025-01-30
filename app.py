@@ -204,5 +204,5 @@ if enviar:
 # Renderizar o mapa no Streamlit 
 mapa_html = mapa._repr_html_()
 with col10:
-    html(mapa_html, width=600, height=700, popup={upg})  # Renderiza o mapa na segunda coluna
+    folium_static(mapa_html, width=600, height=700, popup={upg})  # Renderiza o mapa na segunda coluna
 
