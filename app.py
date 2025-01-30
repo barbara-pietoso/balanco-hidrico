@@ -73,7 +73,7 @@ if enviar:
         if valida_coordenadas(latitude, longitude):
             try:
                 # Criar um mapa centralizado nas coordenadas inseridas
-                mapa = folium.Map(location=[latitude, longitude], zoom_start=10)
+                mapa = folium.Map(location=[latitude, longitude], zoom_start=15)
 
                 # Adicionar a funcionalidade de mostrar as coordenadas ao mover o mouse
                 folium.LatLngPopup().add_to(mapa)
@@ -215,4 +215,4 @@ if enviar:
 
 # Renderizar o mapa no Streamlit 
 with col10:
-    folium_static(mapa, width=600, height=500)  # Renderiza o mapa na segunda coluna
+    folium_static(mapa, width=600, height=450)  # Renderiza o mapa na segunda coluna
