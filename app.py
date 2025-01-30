@@ -23,7 +23,6 @@ col3.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/m
 col2.title('Disponibilidade Hídrica no Rio Grande do Sul')
 col1.image('https://github.com/barbara-pietoso/disponibilidade-hidrica-rs/blob/main/drhslogo.png?raw=true', width=150)
 
-
 # Limites aproximados de latitude e longitude do Rio Grande do Sul
 LAT_MIN = -33.75  # Latitude mínima
 LAT_MAX = -27.5   # Latitude máxima
@@ -37,17 +36,14 @@ zip_url = "https://github.com/barbara-pietoso/balanco-hidrico/raw/main/arquivos_
 def valida_coordenadas(latitude, longitude):
     return LAT_MIN <= latitude <= LAT_MAX and LON_MIN <= longitude <= LON_MAX
 
-# Layout do título no topo
-#st.markdown("<h1 style='text-align: center;'>Disponibilidade Hídrica para Outorga</h1>", unsafe_allow_html=True)
-
 # Layout de colunas para as entradas (latitude e longitude) à esquerda e o mapa à direita
 col4, col5, col6 = st.columns([1,1,1])  # A primeira coluna (1) para as entradas e a segunda (2) para o mapa
 
 # Entradas de latitude, longitude e área
 with col4:
-    latitude_input = st.text_input("Latitude", placeholder="Digite a latitude. Ex: -32.000")
+    latitude_input = st.text_input("Latitude", placeholder="Digite a latitude. Ex: -32.000", key="latitude")
 with col5:
-    longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000")
+    longitude_input = st.text_input("Longitude", placeholder="Digite a longitude. Ex: -50.000", key="longitude")
 with col6:
     area_input = st.text_input("Área (em km²)", placeholder="Digite a área em km²")
     
@@ -61,6 +57,25 @@ with col10:
 
 # Adicionar a funcionalidade de mostrar as coordenadas ao mover o mouse
 folium.LatLngPopup().add_to(mapa)
+
+# Função para capturar o clique e atualizar os campos de latitude e longitude
+def update_coords(lat, lng):
+    st.session_state.latitude = lat
+    st.session_state.longitude = lng
+
+# Adicionar um evento de clique no mapa
+mapa.add_child(folium.LatLngPopup())
+
+# JavaScript para atualizar os campos de latitude e longitude
+html_code = """
+<script>
+function updateCoords(lat, lng) {
+    document.getElementById("latitude").value = lat;
+    document.getElementById("longitude").value = lng;
+}
+</script>
+"""
+html(html_code, width=0, height=0)
 
 # Lógica para exibição do mapa e consulta dos dados
 if enviar:
